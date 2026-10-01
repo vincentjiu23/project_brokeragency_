@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subscription Plan Views -->
+    <record id="view_vin_subscription_plan_tree" model="ir.ui.view">
+        <field name="name">vin.subscription.plan.tree</field>
+        <field name="model">vin.subscription.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Subscription Plans" decoration-success="state == 'active'" decoration-muted="state == 'archived'">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="target_type"/>
+                <field name="billing_interval"/>
+                <field name="price"/>
+                <field name="currency"/>
+                <field name="take_rate_commission_discount"/>
+                <field name="max_active_projects"/>
+                <field name="vault_storage_gb"/>
+                <field name="payout_sla_hours"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_subscription_plan_form" model="ir.ui.view">
+        <field name="name">vin.subscription.plan.form</field>
+        <field name="model">vin.subscription.plan</field>
+        <field name="arch" type="xml">
+            <form string="Subscription Plan">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="active,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Plan Name (e.g. Enterprise Client Tier)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target &amp; Billing">
+                            <field name="tenant_id"/>
+                            <field name="code"/>
+                            <field name="target_type"/>
+                            <field name="billing_interval"/>
+                            <field name="price"/>
+                            <field name="currency"/>
+                        </group>
+                        <group string="Privileges &amp; Quotas">
+                            <field name="take_rate_commission_discount"/>
+                            <field name="max_active_projects"/>
+                            <field name="vault_storage_gb"/>
+                            <field name="payout_sla_hours"/>
+                            <field name="dedicated_account_manager"/>
+                            <field name="four_eyes_governance_enabled"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Plan details, features, and marketing terms..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Subscription Views -->
+    <record id="view_vin_subscription_tree" model="ir.ui.view">
+        <field name="name">vin.subscription.tree</field>
+        <field name="model">vin.subscription</field>
+        <field name="arch" type="xml">
+            <tree string="Active Subscriptions" decoration-info="state == 'trial'" decoration-success="state == 'active'" decoration-warning="state == 'past_due'" decoration-muted="state in ['cancelled', 'expired']">
+                <field name="subscription_number"/>
+                <field name="plan_id"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="price"/>
+                <field name="currency"/>
+                <field name="current_period_start"/>
+                <field name="current_period_end"/>
+                <field name="auto_renew"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_subscription_form" model="ir.ui.view">
+        <field name="name">vin.subscription.form</field>
+        <field name="model">vin.subscription</field>
+        <field name="arch" type="xml">
+            <form string="Subscription">
+                <header>
+                    <button name="action_activate" string="Activate" type="object" class="oe_highlight" invisible="state == 'active'"/>
+                    <button name="action_renew" string="Renew Period" type="object" class="btn-success" invisible="state != 'active'"/>
+                    <button name="action_cancel" string="Cancel Subscription" type="object" class="btn-secondary" invisible="state in ['cancelled', 'expired']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="trial,active,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Subscription Reference</span>
+                        <h1><field name="subscription_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Subscriber &amp; Plan">
+                            <field name="tenant_id"/>
+                            <field name="plan_id"/>
+                            <field name="client_organization_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="price"/>
+                            <field name="currency"/>
+                        </group>
+                        <group string="Schedule &amp; Renewal">
+                            <field name="start_date"/>
+                            <field name="current_period_start"/>
+                            <field name="current_period_end"/>
+                            <field name="auto_renew"/>
+                            <field name="cancelled_at"/>
+                            <field name="cancellation_reason"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Commission Profile Views -->
+    <record id="view_vin_commission_profile_tree" model="ir.ui.view">
+        <field name="name">vin.commission.rule.profile.tree</field>
+        <field name="model">vin.commission.rule.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Commission Rule Profiles">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="base_take_rate"/>
+                <field name="min_commission_amount"/>
+                <field name="max_commission_cap"/>
+                <field name="is_default"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_commission_profile_form" model="ir.ui.view">
+        <field name="name">vin.commission.rule.profile.form</field>
+        <field name="model">vin.commission.rule.profile</field>
+        <field name="arch" type="xml">
+            <form string="Commission Rule Profile">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Profile Name (e.g. Standard 15% Platform Take-Rate)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Base Parameters">
+                            <field name="tenant_id"/>
+                            <field name="code"/>
+                            <field name="base_take_rate"/>
+                            <field name="is_default"/>
+                        </group>
+                        <group string="Boundary Caps">
+                            <field name="min_commission_amount"/>
+                            <field name="max_commission_cap"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Volume Tier Overrides">
+                            <field name="tier_line_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="min_volume"/>
+                                    <field name="max_volume"/>
+                                    <field name="take_rate"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_subscription_plan" model="ir.actions.act_window">
+        <field name="name">Subscription Plans</field>
+        <field name="res_model">vin.subscription.plan</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_subscription" model="ir.actions.act_window">
+        <field name="name">Organization Subscriptions</field>
+        <field name="res_model">vin.subscription</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_commission_profile" model="ir.actions.act_window">
+        <field name="name">Commission Rule Profiles</field>
+        <field name="res_model">vin.commission.rule.profile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_subscription_root" name="Subscriptions &amp; Fees" parent="vin_core.menu_vin_core_root" sequence="70"/>
+    <menuitem id="menu_vin_subscription_sub" name="Active Subscriptions" parent="menu_vin_subscription_root" action="action_vin_subscription" sequence="10"/>
+    <menuitem id="menu_vin_subscription_plan_sub" name="Subscription Plans" parent="menu_vin_subscription_root" action="action_vin_subscription_plan" sequence="20"/>
+    <menuitem id="menu_vin_commission_profile_sub" name="Commission Profiles" parent="menu_vin_subscription_root" action="action_vin_commission_profile" sequence="30"/>
+</odoo>

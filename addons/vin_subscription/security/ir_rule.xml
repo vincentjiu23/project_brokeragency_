@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Multi-Tenancy Record Rules for Subscription & Commissions -->
+        <record id="rule_vin_subscription_plan_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Subscription Plan: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_subscription_plan"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_subscription_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Subscription: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_subscription"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_commission_profile_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Commission Profile: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_commission_rule_profile"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_commission_tier_line_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Commission Tier: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_commission_tier_line"/>
+            <field name="domain_force">['|', ('profile_id.tenant_id', '=', False), ('profile_id.tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Multi-Tenancy Record Rules for Tax & Invoicing -->
+        <record id="rule_vin_tax_profile_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Tax Profile: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_tax_profile"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_invoice_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Invoice: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_invoice"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_invoice_line_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Invoice Line: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_invoice_line"/>
+            <field name="domain_force">['|', ('invoice_id.tenant_id', '=', False), ('invoice_id.tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_vin_tax_certificate_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Tax Certificate: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_tax_certificate"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

@@ -183,9 +183,9 @@ module/
   - [x] Module: `vin_escrow` (Escrow Accounts, Milestone Allocations, Balanced Double-Entry Virtual Ledger)
   - [x] Module: `vin_payment` (Provider Gateway Abstraction, Webhook Idempotency, Payout Orchestration, Circuit Breaker)
   - [x] Service: `services/payment_gateway` (Resilience gateway & mock provider abstraction)
-- [ ] **Phase 5: Tax, Invoicing & Subscription**
-  - [ ] Module: `vin_tax_invoice`
-  - [ ] Module: `vin_subscription`
+- [x] **Phase 5: Tax, Invoicing & Subscription**
+  - [x] Module: `vin_tax_invoice` (Tax Profiles, VAT/PPN, WHT/PPh, Milestone Invoices, Bukti Potong Certificates, Tax Resolver)
+  - [x] Module: `vin_subscription` (Client/Partner Plans, Tier Privileges, Dynamic Fee Evaluator, Commission Rule Profiles)
 - [ ] **Phase 6: Acceptance, Revision & Dispute Engine**
   - [ ] Module: `vin_dispute`
 - [ ] **Phase 7: IP Rights, Portfolio & Reputation**

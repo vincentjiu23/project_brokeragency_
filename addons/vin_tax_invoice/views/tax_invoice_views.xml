@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tax Profile Views -->
+    <record id="view_vin_tax_profile_tree" model="ir.ui.view">
+        <field name="name">vin.tax.profile.tree</field>
+        <field name="model">vin.tax.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Tax Profiles" decoration-success="status == 'verified'" decoration-danger="status == 'rejected'" decoration-muted="status == 'expired'">
+                <field name="name"/>
+                <field name="jurisdiction"/>
+                <field name="entity_type"/>
+                <field name="tax_id_number"/>
+                <field name="vat_registered"/>
+                <field name="default_vat_rate"/>
+                <field name="default_wht_rate"/>
+                <field name="wht_article"/>
+                <field name="status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_tax_profile_form" model="ir.ui.view">
+        <field name="name">vin.tax.profile.form</field>
+        <field name="model">vin.tax.profile</field>
+        <field name="arch" type="xml">
+            <form string="Tax Profile">
+                <header>
+                    <button name="action_verify" string="Verify &amp; Activate" type="object" class="oe_highlight" invisible="status == 'verified'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="status in ['rejected', 'expired']"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,verified,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Profile Name (e.g. PT Mitra Kreatif Pajak)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Entity Information">
+                            <field name="tenant_id"/>
+                            <field name="organization_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="legal_entity_id"/>
+                            <field name="jurisdiction"/>
+                            <field name="entity_type"/>
+                        </group>
+                        <group string="Tax Identification &amp; Rates">
+                            <field name="tax_id_number"/>
+                            <field name="has_npwp"/>
+                            <field name="vat_registered"/>
+                            <field name="default_vat_rate"/>
+                            <field name="default_wht_rate"/>
+                            <field name="wht_article"/>
+                            <field name="tax_exemption_number"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Validity &amp; Verification">
+                            <group>
+                                <group>
+                                    <field name="effective_date"/>
+                                    <field name="expiry_date"/>
+                                </group>
+                                <group>
+                                    <field name="verified_by_user_id"/>
+                                    <field name="verified_at"/>
+                                </group>
+                            </group>
+                            <field name="verification_notes" placeholder="Notes on verified certificates or rejection rationale..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Invoice Views -->
+    <record id="view_vin_invoice_tree" model="ir.ui.view">
+        <field name="name">vin.invoice.tree</field>
+        <field name="model">vin.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="Invoices" decoration-info="state == 'draft'" decoration-warning="state == 'issued'" decoration-success="state == 'paid'" decoration-muted="state == 'cancelled'">
+                <field name="invoice_number"/>
+                <field name="invoice_type"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="issue_date"/>
+                <field name="due_date"/>
+                <field name="currency"/>
+                <field name="subtotal_amount"/>
+                <field name="vat_amount"/>
+                <field name="wht_amount"/>
+                <field name="net_payable"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_invoice_form" model="ir.ui.view">
+        <field name="name">vin.invoice.form</field>
+        <field name="model">vin.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Invoice">
+                <header>
+                    <button name="action_issue" string="Issue Invoice" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_mark_paid" string="Mark as Paid" type="object" class="btn-success" invisible="state != 'issued'"/>
+                    <button name="action_cancel" string="Cancel Invoice" type="object" class="btn-secondary" invisible="state in ['paid', 'cancelled', 'refunded']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,issued,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Invoice Number</span>
+                        <h1><field name="invoice_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Parties &amp; Contracts">
+                            <field name="tenant_id"/>
+                            <field name="invoice_type"/>
+                            <field name="client_organization_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="contract_id"/>
+                            <field name="milestone_id"/>
+                            <field name="escrow_allocation_id"/>
+                            <field name="payout_id"/>
+                        </group>
+                        <group string="Invoice Dates &amp; Tax Profile">
+                            <field name="tax_profile_id"/>
+                            <field name="issue_date"/>
+                            <field name="due_date"/>
+                            <field name="currency"/>
+                            <field name="payment_reference"/>
+                            <field name="paid_at"/>
+                            <field name="digital_signature_hash"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Line Items">
+                            <field name="invoice_line_ids">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal"/>
+                                    <field name="vat_rate"/>
+                                    <field name="vat_amount"/>
+                                    <field name="wht_rate"/>
+                                    <field name="wht_amount"/>
+                                    <field name="total"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="subtotal_amount"/>
+                                <field name="vat_amount"/>
+                                <field name="gross_total"/>
+                                <field name="wht_amount"/>
+                                <field name="net_payable" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tax Certificate Views -->
+    <record id="view_vin_tax_certificate_tree" model="ir.ui.view">
+        <field name="name">vin.tax.certificate.tree</field>
+        <field name="model">vin.tax.certificate</field>
+        <field name="arch" type="xml">
+            <tree string="Tax Certificates" decoration-success="state == 'generated'" decoration-info="state == 'reported'">
+                <field name="certificate_number"/>
+                <field name="tax_year"/>
+                <field name="tax_period"/>
+                <field name="withheld_party_name"/>
+                <field name="withheld_party_tax_id"/>
+                <field name="tax_article"/>
+                <field name="currency"/>
+                <field name="gross_amount"/>
+                <field name="tax_rate"/>
+                <field name="tax_withheld_amount"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_tax_certificate_form" model="ir.ui.view">
+        <field name="name">vin.tax.certificate.form</field>
+        <field name="model">vin.tax.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Tax Withholding Certificate">
+                <header>
+                    <button name="action_generate_and_sign" string="Sign &amp; Seal Certificate" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_mark_reported" string="Mark Reported to Authority" type="object" class="btn-success" invisible="state != 'generated'"/>
+                    <button name="action_void" string="Void Certificate" type="object" class="btn-danger" invisible="state == 'void'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,generated,reported"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Certificate Number</span>
+                        <h1><field name="certificate_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Period &amp; References">
+                            <field name="tenant_id"/>
+                            <field name="invoice_id"/>
+                            <field name="tax_profile_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="tax_year"/>
+                            <field name="tax_period"/>
+                        </group>
+                        <group string="Tax Calculation &amp; Sealing">
+                            <field name="tax_article"/>
+                            <field name="currency"/>
+                            <field name="gross_amount"/>
+                            <field name="tax_rate"/>
+                            <field name="tax_withheld_amount"/>
+                            <field name="sha256_hash"/>
+                            <field name="signature_date"/>
+                        </group>
+                    </group>
+                    <group string="Parties">
+                        <group string="Withholding Agent (Pemotong Pajak)">
+                            <field name="withholding_party_name"/>
+                            <field name="withholding_party_tax_id"/>
+                        </group>
+                        <group string="Beneficiary (Penerima Penghasilan)">
+                            <field name="withheld_party_name"/>
+                            <field name="withheld_party_tax_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_invoice" model="ir.actions.act_window">
+        <field name="name">Invoices &amp; Billing</field>
+        <field name="res_model">vin.invoice</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_tax_profile" model="ir.actions.act_window">
+        <field name="name">Tax Profiles</field>
+        <field name="res_model">vin.tax.profile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_tax_certificate" model="ir.actions.act_window">
+        <field name="name">Tax Withholding Certificates</field>
+        <field name="res_model">vin.tax.certificate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_tax_invoice_root" name="Tax &amp; Billing" parent="vin_core.menu_vin_core_root" sequence="60"/>
+    <menuitem id="menu_vin_invoice_sub" name="Invoices" parent="menu_vin_tax_invoice_root" action="action_vin_invoice" sequence="10"/>
+    <menuitem id="menu_vin_tax_profile_sub" name="Tax Profiles" parent="menu_vin_tax_invoice_root" action="action_vin_tax_profile" sequence="20"/>
+    <menuitem id="menu_vin_tax_certificate_sub" name="Bukti Potong (Certificates)" parent="menu_vin_tax_invoice_root" action="action_vin_tax_certificate" sequence="30"/>
+</odoo>

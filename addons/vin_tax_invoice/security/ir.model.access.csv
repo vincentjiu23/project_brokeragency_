@@ -1,1 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_tax_profile_user,vin.tax.profile.user,model_vin_tax_profile,base.group_user,1,1,1,0
+access_vin_invoice_user,vin.invoice.user,model_vin_invoice,base.group_user,1,1,1,0
+access_vin_invoice_line_user,vin.invoice.line.user,model_vin_invoice_line,base.group_user,1,1,1,0
+access_vin_tax_certificate_user,vin.tax.certificate.user,model_vin_tax_certificate,base.group_user,1,1,1,0

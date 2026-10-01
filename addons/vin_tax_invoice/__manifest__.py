@@ -6,10 +6,11 @@
     'summary': 'Tax resolver, VAT/PPN, WHT/PPh, partner invoices, and tax certificates',
     'description': """Owns tax profiles, invoice orchestration, tax resolver integrations, and immutable tax certificate payloads.""",
     'author': 'VIN Project Team',
-    'depends': ['vin_core', 'vin_escrow', 'vin_audit'],
+    'depends': ['vin_core', 'vin_escrow', 'vin_audit', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/tax_invoice_views.xml',
     ],
     'installable': True,
     'application': False,

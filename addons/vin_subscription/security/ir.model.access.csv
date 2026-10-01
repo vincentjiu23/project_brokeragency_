@@ -1,1 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_subscription_plan_user,vin.subscription.plan.user,model_vin_subscription_plan,base.group_user,1,1,1,0
+access_vin_subscription_user,vin.subscription.user,model_vin_subscription,base.group_user,1,1,1,0
+access_vin_commission_rule_profile_user,vin.commission.rule.profile.user,model_vin_commission_rule_profile,base.group_user,1,1,1,0
+access_vin_commission_tier_line_user,vin.commission.tier.line.user,model_vin_commission_tier_line,base.group_user,1,1,1,0

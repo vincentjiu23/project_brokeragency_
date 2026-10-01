@@ -6,10 +6,11 @@
     'summary': 'Client/Partner subscription plans, usage add-ons, and commission rule profiles',
     'description': """Owns organization subscription tiers, usage-based billing, take-rate discounts, and commission rule profiles.""",
     'author': 'VIN Project Team',
-    'depends': ['vin_core', 'vin_partner', 'vin_escrow', 'vin_audit'],
+    'depends': ['vin_core', 'vin_partner', 'vin_escrow', 'vin_audit', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/subscription_views.xml',
     ],
     'installable': True,
     'application': False,
