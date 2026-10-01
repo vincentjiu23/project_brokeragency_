@@ -6,10 +6,11 @@
     'summary': 'Acceptance disputes, revision classification objections, and arbitration lock',
     'description': """Owns acceptance dispute state machines, revision classification objections, and evidence package linkages.""",
     'author': 'VIN Project Team',
-    'depends': ['vin_core', 'vin_execution', 'vin_escrow', 'vin_audit'],
+    'depends': ['vin_core', 'vin_execution', 'vin_escrow', 'vin_audit', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/dispute_views.xml',
     ],
     'installable': True,
     'application': False,

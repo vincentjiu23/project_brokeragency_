@@ -1,1 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_dispute_user,vin.dispute.user,model_vin_dispute,base.group_user,1,1,1,0
+access_vin_dispute_evidence_user,vin.dispute.evidence.user,model_vin_dispute_evidence,base.group_user,1,1,1,0
+access_vin_arbitration_case_user,vin.arbitration.case.user,model_vin_arbitration_case,base.group_user,1,1,1,0

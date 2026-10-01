@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dispute Views -->
+    <record id="view_vin_dispute_tree" model="ir.ui.view">
+        <field name="name">vin.dispute.tree</field>
+        <field name="model">vin.dispute</field>
+        <field name="arch" type="xml">
+            <tree string="Disputes" decoration-danger="state in ['open', 'escalated_mediation', 'escalated_arbitration']" decoration-success="state in ['resolved', 'closed']" decoration-muted="state == 'withdrawn'">
+                <field name="dispute_number"/>
+                <field name="title"/>
+                <field name="dispute_type"/>
+                <field name="contract_id"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="disputed_amount"/>
+                <field name="currency"/>
+                <field name="initiator_type"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_dispute_form" model="ir.ui.view">
+        <field name="name">vin.dispute.form</field>
+        <field name="model">vin.dispute</field>
+        <field name="arch" type="xml">
+            <form string="Dispute Case">
+                <header>
+                    <button name="action_open" string="Open Dispute &amp; Freeze Escrow" type="object" class="btn-danger" invisible="state != 'draft'"/>
+                    <button name="action_escalate_mediation" string="Escalate to Mediation (Tier 2)" type="object" class="oe_highlight" invisible="state != 'open'"/>
+                    <button name="action_escalate_arbitration" string="Escalate to Arbitration (Tier 3)" type="object" class="btn-warning" invisible="state not in ['open', 'escalated_mediation']"/>
+                    <button name="action_withdraw" string="Withdraw Dispute" type="object" class="btn-secondary" invisible="state in ['resolved', 'closed', 'withdrawn']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,escalated_mediation,escalated_arbitration,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Dispute Reference</span>
+                        <h1><field name="dispute_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Case Information">
+                            <field name="tenant_id"/>
+                            <field name="title"/>
+                            <field name="dispute_type"/>
+                            <field name="initiator_type"/>
+                            <field name="opened_by_user_id"/>
+                        </group>
+                        <group string="Contract &amp; Escrow Linkage">
+                            <field name="contract_id"/>
+                            <field name="workstream_id"/>
+                            <field name="milestone_id"/>
+                            <field name="deliverable_id"/>
+                            <field name="escrow_allocation_id"/>
+                            <field name="disputed_amount"/>
+                            <field name="currency"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Factual claims, chronological narrative, and relief sought..."/>
+                    <notebook>
+                        <page string="Submitted Evidence Packages">
+                            <field name="evidence_ids">
+                                <tree editable="bottom">
+                                    <field name="title"/>
+                                    <field name="submitted_by_party"/>
+                                    <field name="evidence_type"/>
+                                    <field name="description"/>
+                                    <field name="sha256_hash"/>
+                                    <field name="uploaded_at"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Resolution &amp; Settlement" invisible="state not in ['resolved', 'closed']">
+                            <group>
+                                <group>
+                                    <field name="resolution_type"/>
+                                    <field name="client_refund_amount"/>
+                                    <field name="partner_payout_amount"/>
+                                </group>
+                                <group>
+                                    <field name="mediator_user_id"/>
+                                    <field name="resolved_at"/>
+                                </group>
+                            </group>
+                            <field name="resolution_summary" placeholder="Summary of formal dispute resolution order..."/>
+                        </page>
+                        <page string="Binding Arbitration Cases">
+                            <field name="arbitration_case_id" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Arbitration Case Views -->
+    <record id="view_vin_arbitration_case_tree" model="ir.ui.view">
+        <field name="name">vin.arbitration.case.tree</field>
+        <field name="model">vin.arbitration.case</field>
+        <field name="arch" type="xml">
+            <tree string="Arbitration Cases" decoration-warning="state in ['filed', 'in_review', 'hearing']" decoration-success="state in ['ruling_rendered', 'enforced']">
+                <field name="case_reference"/>
+                <field name="dispute_id"/>
+                <field name="arbitration_body"/>
+                <field name="arbitrator_lead_name"/>
+                <field name="filing_date"/>
+                <field name="hearing_date"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_arbitration_case_form" model="ir.ui.view">
+        <field name="name">vin.arbitration.case.form</field>
+        <field name="model">vin.arbitration.case</field>
+        <field name="arch" type="xml">
+            <form string="Arbitration Case">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="filed,in_review,hearing,ruling_rendered,enforced"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Docket Reference</span>
+                        <h1><field name="case_reference"/></h1>
+                    </div>
+                    <group>
+                        <group string="Arbitral Tribunal">
+                            <field name="tenant_id"/>
+                            <field name="dispute_id"/>
+                            <field name="arbitration_body"/>
+                            <field name="arbitrator_lead_name"/>
+                            <field name="arbitration_fee"/>
+                        </group>
+                        <group string="Docket Dates &amp; Sealing">
+                            <field name="filing_date"/>
+                            <field name="hearing_date"/>
+                            <field name="ruling_rendered_at"/>
+                            <field name="ruling_sha256"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Binding Arbitral Award">
+                            <field name="binding_ruling_summary" placeholder="Full legal text of the binding arbitral award..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_dispute" model="ir.actions.act_window">
+        <field name="name">Acceptance Disputes</field>
+        <field name="res_model">vin.dispute</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_arbitration_case" model="ir.actions.act_window">
+        <field name="name">Arbitration Cases</field>
+        <field name="res_model">vin.arbitration.case</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_dispute_root" name="Disputes &amp; Legal" parent="vin_core.menu_vin_core_root" sequence="80"/>
+    <menuitem id="menu_vin_dispute_sub" name="Disputes" parent="menu_vin_dispute_root" action="action_vin_dispute" sequence="10"/>
+    <menuitem id="menu_vin_arbitration_sub" name="Arbitration Cases" parent="menu_vin_dispute_root" action="action_vin_arbitration_case" sequence="20"/>
+</odoo>
