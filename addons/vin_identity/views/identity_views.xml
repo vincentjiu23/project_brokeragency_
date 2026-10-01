@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Identity Links -->
+    <record id="view_vin_identity_link_tree" model="ir.ui.view">
+        <field name="name">vin.identity.link.tree</field>
+        <field name="model">vin.identity.link</field>
+        <field name="arch" type="xml">
+            <tree string="External Identity Links">
+                <field name="user_id"/>
+                <field name="idp_provider"/>
+                <field name="external_sub"/>
+                <field name="tenant_id"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Verification Cases -->
+    <record id="view_vin_identity_verification_tree" model="ir.ui.view">
+        <field name="name">vin.identity.verification.tree</field>
+        <field name="model">vin.identity.verification</field>
+        <field name="arch" type="xml">
+            <tree string="Identity Verification Cases">
+                <field name="user_id"/>
+                <field name="verification_level"/>
+                <field name="id_document_type"/>
+                <field name="status"/>
+                <field name="verified_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_identity_verification_form" model="ir.ui.view">
+        <field name="name">vin.identity.verification.form</field>
+        <field name="model">vin.identity.verification</field>
+        <field name="arch" type="xml">
+            <form string="KYC/KYB Verification Case">
+                <header>
+                    <button name="action_approve_verification" type="object" string="Approve KYC/KYB" states="pending,in_review" class="btn-primary"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,in_review,verified,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Applicant &amp; Scope">
+                            <field name="user_id"/>
+                            <field name="tenant_id"/>
+                            <field name="verification_level"/>
+                            <field name="id_document_type"/>
+                        </group>
+                        <group string="Evidence &amp; Review">
+                            <field name="evidence_vault_ref"/>
+                            <field name="reviewed_by_id"/>
+                            <field name="verified_at"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Review Details">
+                            <field name="rejection_reason" placeholder="Notes or rejection reasons..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_identity_verification" model="ir.actions.act_window">
+        <field name="name">KYC/KYB Verifications</field>
+        <field name="res_model">vin.identity.verification</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_identity_verification" name="KYC/KYB Cases" parent="vin_security.menu_vin_security_root" action="action_vin_identity_verification" sequence="30"/>
+</odoo>

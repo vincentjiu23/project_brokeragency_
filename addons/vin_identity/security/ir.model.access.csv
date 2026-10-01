@@ -1,1 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_identity_link_user,vin.identity.link.user,model_vin_identity_link,base.group_user,1,0,0,0
+access_vin_identity_link_admin,vin.identity.link.admin,model_vin_identity_link,base.group_system,1,1,1,1
+access_vin_identity_verification_user,vin.identity.verification.user,model_vin_identity_verification,base.group_user,1,1,1,0
+access_vin_identity_verification_admin,vin.identity.verification.admin,model_vin_identity_verification,base.group_system,1,1,1,1

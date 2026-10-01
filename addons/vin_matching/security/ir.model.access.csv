@@ -1,1 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_project_brief_user,vin.project.brief.user,model_vin_project_brief,base.group_user,1,1,1,0
+access_vin_project_brief_admin,vin.project.brief.admin,model_vin_project_brief,base.group_system,1,1,1,1
+access_vin_match_snapshot_user,vin.match.snapshot.user,model_vin_match_snapshot,base.group_user,1,0,1,0
+access_vin_match_snapshot_admin,vin.match.snapshot.admin,model_vin_match_snapshot,base.group_system,1,0,1,0
+access_vin_match_candidate_user,vin.match.candidate.user,model_vin_match_candidate,base.group_user,1,0,1,0
+access_vin_match_candidate_admin,vin.match.candidate.admin,model_vin_match_candidate,base.group_system,1,0,1,0
+access_vin_opportunity_record_user,vin.opportunity.record.user,model_vin_opportunity_record,base.group_user,1,1,1,0
+access_vin_opportunity_record_admin,vin.opportunity.record.admin,model_vin_opportunity_record,base.group_system,1,1,1,1

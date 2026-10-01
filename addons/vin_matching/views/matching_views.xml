@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Brief Views -->
+    <record id="view_vin_project_brief_tree" model="ir.ui.view">
+        <field name="name">vin.project.brief.tree</field>
+        <field name="model">vin.project.brief</field>
+        <field name="arch" type="xml">
+            <tree string="Project Briefs">
+                <field name="title"/>
+                <field name="version_no"/>
+                <field name="client_organization_id"/>
+                <field name="target_account_type"/>
+                <field name="budget_min"/>
+                <field name="budget_max"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="delivery_deadline"/>
+                <field name="anonymity_mode"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_project_brief_form" model="ir.ui.view">
+        <field name="name">vin.project.brief.form</field>
+        <field name="model">vin.project.brief</field>
+        <field name="arch" type="xml">
+            <form string="Project Brief">
+                <header>
+                    <button name="action_submit_and_match" type="object" string="Submit &amp; Match Candidates" states="draft" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,matched,shortlisted,contracted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" string="Brief Title"/>
+                        <h1>
+                            <field name="title" placeholder="e.g. Q4 Brand Identity Overhaul"/>
+                        </h1>
+                        <span class="badge badge-info">Version <field name="version_no" readonly="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Engagement Parameters">
+                            <field name="client_organization_id"/>
+                            <field name="tenant_id"/>
+                            <field name="master_project_id"/>
+                            <field name="target_account_type"/>
+                            <field name="anonymity_mode"/>
+                        </group>
+                        <group string="Commercial &amp; Timeline">
+                            <field name="budget_min"/>
+                            <field name="budget_max"/>
+                            <field name="currency_id"/>
+                            <field name="delivery_deadline"/>
+                            <field name="immutable_hash" readonly="1"/>
+                            <field name="uuid" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Creative Scope">
+                            <field name="scope_summary" placeholder="Describe the creative challenges, scope of work, deliverables, and specific constraints..."/>
+                        </page>
+                        <page string="Required Expertise">
+                            <field name="required_expertise_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Matching Snapshots">
+                            <field name="match_snapshot_ids" readonly="1">
+                                <tree>
+                                    <field name="snapshot_time"/>
+                                    <field name="algorithm_version"/>
+                                    <field name="total_candidates_screened"/>
+                                    <field name="total_eligible_matched"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Dispatched Opportunities">
+                            <field name="opportunity_ids" readonly="1">
+                                <tree>
+                                    <field name="partner_profile_id"/>
+                                    <field name="dispatched_at"/>
+                                    <field name="expires_at"/>
+                                    <field name="state"/>
+                                    <field name="client_disclosed"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Match Snapshot Views -->
+    <record id="view_vin_match_snapshot_tree" model="ir.ui.view">
+        <field name="name">vin.match.snapshot.tree</field>
+        <field name="model">vin.match.snapshot</field>
+        <field name="arch" type="xml">
+            <tree string="Match Snapshots">
+                <field name="brief_id"/>
+                <field name="snapshot_time"/>
+                <field name="algorithm_version"/>
+                <field name="total_candidates_screened"/>
+                <field name="total_eligible_matched"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_match_snapshot_form" model="ir.ui.view">
+        <field name="name">vin.match.snapshot.form</field>
+        <field name="model">vin.match.snapshot</field>
+        <field name="arch" type="xml">
+            <form string="Match Snapshot" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Snapshot Metadata">
+                            <field name="brief_id"/>
+                            <field name="tenant_id"/>
+                            <field name="snapshot_time"/>
+                            <field name="algorithm_version"/>
+                        </group>
+                        <group string="Screening Statistics">
+                            <field name="total_candidates_screened"/>
+                            <field name="total_eligible_matched"/>
+                            <field name="state"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ranked Eligible Candidates">
+                            <field name="candidate_ids">
+                                <tree>
+                                    <field name="rank"/>
+                                    <field name="partner_profile_id"/>
+                                    <field name="overall_score"/>
+                                    <field name="expertise_match_score"/>
+                                    <field name="reputation_score"/>
+                                    <field name="hard_eligibility_passed"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Opportunity Record Views -->
+    <record id="view_vin_opportunity_record_tree" model="ir.ui.view">
+        <field name="name">vin.opportunity.record.tree</field>
+        <field name="model">vin.opportunity.record</field>
+        <field name="arch" type="xml">
+            <tree string="Opportunities">
+                <field name="brief_id"/>
+                <field name="partner_profile_id"/>
+                <field name="dispatched_at"/>
+                <field name="expires_at"/>
+                <field name="state"/>
+                <field name="client_disclosed"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_opportunity_record_form" model="ir.ui.view">
+        <field name="name">vin.opportunity.record.form</field>
+        <field name="model">vin.opportunity.record</field>
+        <field name="arch" type="xml">
+            <form string="Project Opportunity">
+                <header>
+                    <button name="action_accept" type="object" string="Accept Opportunity" states="dispatched" class="btn-success"/>
+                    <button name="action_decline" type="object" string="Decline Opportunity" states="dispatched" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="dispatched,accepted,declined,expired"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Engagement Context">
+                            <field name="brief_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="client_disclosed"/>
+                            <field name="dispatched_at"/>
+                            <field name="expires_at"/>
+                            <field name="responded_at"/>
+                        </group>
+                        <group string="Security &amp; Reference">
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <group string="Project Overview">
+                        <field name="blind_scope_summary" readonly="1"/>
+                        <field name="response_note" placeholder="Optional response pitch or notes..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions and Menus -->
+    <record id="action_vin_project_brief" model="ir.actions.act_window">
+        <field name="name">Project Briefs</field>
+        <field name="res_model">vin.project.brief</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_match_snapshot" model="ir.actions.act_window">
+        <field name="name">Match Snapshots</field>
+        <field name="res_model">vin.match.snapshot</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_opportunity_record" model="ir.actions.act_window">
+        <field name="name">Opportunities</field>
+        <field name="res_model">vin.opportunity.record</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_matching_root" name="Matching &amp; Briefs" sequence="25"/>
+    <menuitem id="menu_vin_project_brief" name="Project Briefs" parent="menu_vin_matching_root" action="action_vin_project_brief" sequence="10"/>
+    <menuitem id="menu_vin_match_snapshot" name="Match Snapshots" parent="menu_vin_matching_root" action="action_vin_match_snapshot" sequence="20"/>
+    <menuitem id="menu_vin_opportunity_record" name="Opportunities" parent="menu_vin_matching_root" action="action_vin_opportunity_record" sequence="30"/>
+</odoo>

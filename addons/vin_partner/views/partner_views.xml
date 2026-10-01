@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Creative Partner Profile Views -->
+    <record id="view_creative_partner_profile_tree" model="ir.ui.view">
+        <field name="name">creative.partner.profile.tree</field>
+        <field name="model">creative.partner.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Creative Partners">
+                <field name="partner_id"/>
+                <field name="account_type"/>
+                <field name="verification_status"/>
+                <field name="availability_state"/>
+                <field name="public_rating"/>
+                <field name="completed_projects_count"/>
+                <field name="on_time_delivery_rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_creative_partner_profile_form" model="ir.ui.view">
+        <field name="name">creative.partner.profile.form</field>
+        <field name="model">creative.partner.profile</field>
+        <field name="arch" type="xml">
+            <form string="Creative Partner Profile">
+                <header>
+                    <button name="action_verify_partner" type="object" string="Verify Partner" states="pending" class="btn-primary"/>
+                    <button name="action_suspend_partner" type="object" string="Suspend Partner" states="verified,featured" class="btn-danger"/>
+                    <field name="verification_status" widget="statusbar" statusbar_visible="pending,verified,featured,suspended"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="partner_id" placeholder="Select Partner Contact"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Classification &amp; Availability">
+                            <field name="account_type"/>
+                            <field name="target_market"/>
+                            <field name="availability_state"/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group string="Metrics &amp; Trust">
+                            <field name="public_rating"/>
+                            <field name="completed_projects_count"/>
+                            <field name="on_time_delivery_rate"/>
+                            <field name="response_sla_compliance_rate"/>
+                            <field name="internal_trust_score" groups="base.group_system"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Expertise &amp; Skills">
+                            <field name="expertise_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Portfolio Showcase">
+                            <field name="portfolio_item_ids">
+                                <tree>
+                                    <field name="title"/>
+                                    <field name="publication_state"/>
+                                    <field name="display_allowed"/>
+                                    <field name="asset_vault_ref"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_creative_partner_profile" model="ir.actions.act_window">
+        <field name="name">Creative Partners</field>
+        <field name="res_model">creative.partner.profile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_partners" name="Partners" parent="vin_core.menu_vin_root" sequence="30"/>
+    <menuitem id="menu_creative_partner_profile" name="Creative Partners" parent="menu_vin_partners" action="action_creative_partner_profile" sequence="10"/>
+</odoo>

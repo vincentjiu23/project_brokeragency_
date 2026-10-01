@@ -1,1 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_partner_expertise_user,vin.partner.expertise.user,model_vin_partner_expertise,base.group_user,1,0,0,0
+access_vin_partner_expertise_admin,vin.partner.expertise.admin,model_vin_partner_expertise,base.group_system,1,1,1,1
+access_creative_partner_profile_user,creative.partner.profile.user,model_creative_partner_profile,base.group_user,1,1,1,0
+access_creative_partner_profile_admin,creative.partner.profile.admin,model_creative_partner_profile,base.group_system,1,1,1,1
+access_vin_portfolio_item_user,vin.portfolio.item.user,model_vin_portfolio_item,base.group_user,1,1,1,0
+access_vin_portfolio_item_admin,vin.portfolio.item.admin,model_vin_portfolio_item,base.group_system,1,1,1,1

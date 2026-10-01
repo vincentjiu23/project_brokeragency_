@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Project Brief Tenant Scoping -->
+        <record id="rule_vin_project_brief_tenant" model="ir.rule">
+            <field name="name">Project Brief: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_project_brief"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('tenant_id.organization_ids.membership_ids.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Match Snapshot Tenant Scoping -->
+        <record id="rule_vin_match_snapshot_tenant" model="ir.rule">
+            <field name="name">Match Snapshot: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_match_snapshot"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('tenant_id.organization_ids.membership_ids.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Opportunity Record Scoping -->
+        <record id="rule_vin_opportunity_record_participant" model="ir.rule">
+            <field name="name">Opportunity Record: Participant Isolation</field>
+            <field name="model_id" ref="model_vin_opportunity_record"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[
+                '|',
+                ('tenant_id.organization_ids.membership_ids.user_id', '=', user.id),
+                ('partner_profile_id.partner_id.user_ids', 'in', [user.id])
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

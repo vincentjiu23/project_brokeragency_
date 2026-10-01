@@ -171,9 +171,9 @@ module/
   - [x] Module: `vin_audit` (Audit Events, SHA-256 Tamper-Evident Hash Chain)
   - [x] Module: `vin_policy` (Policy Versions, Effective Date Resolution, Platform Limits)
   - [x] Module: `vin_security` (RLS Context Helper, Four-Eyes SoD Engine, Cross-Tenant Logging)
-- [ ] **Phase 1: Discovery & Matching**
-  - [ ] Module: `vin_identity` & `vin_partner`
-  - [ ] Module: `vin_matching`
+- [x] **Phase 1: Discovery & Matching**
+  - [x] Module: `vin_identity` & `vin_partner`
+  - [x] Module: `vin_matching`
 - [ ] **Phase 2: Project Execution & Asset Vault**
   - [ ] Module: `vin_execution`
   - [ ] Service: `asset_vault`
