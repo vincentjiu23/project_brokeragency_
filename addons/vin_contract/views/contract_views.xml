@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Contract Views -->
+    <record id="view_vin_contract_tree" model="ir.ui.view">
+        <field name="name">vin.contract.tree</field>
+        <field name="model">vin.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Contracts">
+                <field name="contract_number"/>
+                <field name="title"/>
+                <field name="version_no"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="total_contract_value"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="effective_date"/>
+                <field name="completion_deadline"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_contract_form" model="ir.ui.view">
+        <field name="name">vin.contract.form</field>
+        <field name="model">vin.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contract (CONTRACT_VN)">
+                <header>
+                    <button name="action_submit_for_approval" type="object" string="Submit for Approval" states="draft" class="btn-primary"/>
+                    <button name="action_activate" type="object" string="Activate Contract" states="in_review,approved" class="btn-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_review,approved,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" string="Contract Title"/>
+                        <h1>
+                            <field name="title" placeholder="e.g. Master Services Agreement"/>
+                        </h1>
+                        <span class="badge badge-info"><field name="contract_number" readonly="1"/></span>
+                        <span class="badge badge-secondary">v<field name="version_no" readonly="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Contract Parties">
+                            <field name="client_organization_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="tenant_id"/>
+                            <field name="parent_contract_id" readonly="1" attrs="{'invisible': [('parent_contract_id', '=', False)]}"/>
+                        </group>
+                        <group string="Commercials &amp; Timeline">
+                            <field name="total_contract_value"/>
+                            <field name="currency_id"/>
+                            <field name="effective_date" readonly="1"/>
+                            <field name="completion_deadline"/>
+                            <field name="signed_hash" readonly="1"/>
+                            <field name="uuid" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Approval Matrix (Four-Eyes)">
+                            <field name="approval_ids">
+                                <tree editable="bottom">
+                                    <field name="approval_tier"/>
+                                    <field name="approver_id"/>
+                                    <field name="state"/>
+                                    <field name="invalidation_reason"/>
+                                    <button name="action_approve" type="object" string="Approve (Four-Eyes)" icon="fa-check" attrs="{'invisible': [('state', '=', 'approved')]}"/>
+                                    <button name="action_reject" type="object" string="Reject" icon="fa-times" attrs="{'invisible': [('state', '=', 'rejected')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Proposals &amp; Deltas">
+                            <field name="proposal_ids" readonly="1">
+                                <tree>
+                                    <field name="version_no"/>
+                                    <field name="author_role"/>
+                                    <field name="proposed_budget"/>
+                                    <field name="proposed_deadline"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Change Requests (CR_VN)">
+                            <field name="change_request_ids" readonly="1">
+                                <tree>
+                                    <field name="cr_number"/>
+                                    <field name="budget_delta"/>
+                                    <field name="timeline_delta_days"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Change Request Views -->
+    <record id="view_vin_contract_change_request_tree" model="ir.ui.view">
+        <field name="name">vin.contract.change.request.tree</field>
+        <field name="model">vin.contract.change.request</field>
+        <field name="arch" type="xml">
+            <tree string="Change Requests">
+                <field name="cr_number"/>
+                <field name="contract_id"/>
+                <field name="budget_delta"/>
+                <field name="timeline_delta_days"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_contract_change_request_form" model="ir.ui.view">
+        <field name="name">vin.contract.change.request.form</field>
+        <field name="model">vin.contract.change.request</field>
+        <field name="arch" type="xml">
+            <form string="Change Request">
+                <header>
+                    <button name="action_submit_for_review" type="object" string="Submit for Review" states="draft" class="btn-primary"/>
+                    <button name="action_approve" type="object" string="Approve CR" states="review" class="btn-success"/>
+                    <button name="action_execute" type="object" string="Execute &amp; Spawn Version" states="approved" class="btn-warning"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved,executed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="cr_number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Contract Scope">
+                            <field name="contract_id"/>
+                            <field name="resulting_contract_id" readonly="1" attrs="{'invisible': [('resulting_contract_id', '=', False)]}"/>
+                        </group>
+                        <group string="Adjustments">
+                            <field name="budget_delta"/>
+                            <field name="currency_id"/>
+                            <field name="timeline_delta_days"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Scope Adjustment Details">
+                            <field name="scope_delta" placeholder="Detail the modifications to deliverables, milestones, or technical requirements..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions and Menus -->
+    <record id="action_vin_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">vin.contract</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_contract_change_request" model="ir.actions.act_window">
+        <field name="name">Change Requests</field>
+        <field name="res_model">vin.contract.change.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_contract_root" name="Contracts &amp; Legal" sequence="30"/>
+    <menuitem id="menu_vin_contract" name="Contracts (CONTRACT_VN)" parent="menu_vin_contract_root" action="action_vin_contract" sequence="10"/>
+    <menuitem id="menu_vin_contract_change_request" name="Change Requests (CR)" parent="menu_vin_contract_root" action="action_vin_contract_change_request" sequence="20"/>
+</odoo>

@@ -1,1 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_contract_user,vin.contract.user,model_vin_contract,base.group_user,1,1,1,0
+access_vin_contract_admin,vin.contract.admin,model_vin_contract,base.group_system,1,1,1,1
+access_vin_contract_proposal_user,vin.contract.proposal.user,model_vin_contract_proposal,base.group_user,1,1,1,0
+access_vin_contract_proposal_admin,vin.contract.proposal.admin,model_vin_contract_proposal,base.group_system,1,1,1,1
+access_vin_contract_approval_user,vin.contract.approval.user,model_vin_contract_approval,base.group_user,1,1,1,0
+access_vin_contract_approval_admin,vin.contract.approval.admin,model_vin_contract_approval,base.group_system,1,1,1,1
+access_vin_contract_change_request_user,vin.contract.change.request.user,model_vin_contract_change_request,base.group_user,1,1,1,0
+access_vin_contract_change_request_admin,vin.contract.change.request.admin,model_vin_contract_change_request,base.group_system,1,1,1,1

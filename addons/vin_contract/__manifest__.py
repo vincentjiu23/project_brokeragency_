@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/contract_views.xml',
     ],
     'installable': True,
     'application': False,

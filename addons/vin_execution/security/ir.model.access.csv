@@ -1,1 +1,15 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_workstream_user,vin.workstream.user,model_vin_workstream,base.group_user,1,1,1,0
+access_vin_workstream_admin,vin.workstream.admin,model_vin_workstream,base.group_system,1,1,1,1
+access_vin_milestone_user,vin.milestone.user,model_vin_milestone,base.group_user,1,1,1,0
+access_vin_milestone_admin,vin.milestone.admin,model_vin_milestone,base.group_system,1,1,1,1
+access_vin_task_user,vin.task.user,model_vin_task,base.group_user,1,1,1,0
+access_vin_task_admin,vin.task.admin,model_vin_task,base.group_system,1,1,1,1
+access_vin_deliverable_user,vin.deliverable.user,model_vin_deliverable,base.group_user,1,1,1,0
+access_vin_deliverable_admin,vin.deliverable.admin,model_vin_deliverable,base.group_system,1,1,1,1
+access_vin_deliverable_submission_user,vin.deliverable.submission.user,model_vin_deliverable_submission,base.group_user,1,1,1,0
+access_vin_deliverable_submission_admin,vin.deliverable.submission.admin,model_vin_deliverable_submission,base.group_system,1,1,1,0
+access_vin_deliverable_acceptance_user,vin.deliverable.acceptance.user,model_vin_deliverable_acceptance,base.group_user,1,0,1,0
+access_vin_deliverable_acceptance_admin,vin.deliverable.acceptance.admin,model_vin_deliverable_acceptance,base.group_system,1,0,1,0
+access_vin_deliverable_revision_user,vin.deliverable.revision.user,model_vin_deliverable_revision,base.group_user,1,0,1,0
+access_vin_deliverable_revision_admin,vin.deliverable.revision.admin,model_vin_deliverable_revision,base.group_system,1,0,1,0

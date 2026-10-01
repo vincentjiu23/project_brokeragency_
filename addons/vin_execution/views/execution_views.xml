@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Workstream Views -->
+    <record id="view_vin_workstream_tree" model="ir.ui.view">
+        <field name="name">vin.workstream.tree</field>
+        <field name="model">vin.workstream</field>
+        <field name="arch" type="xml">
+            <tree string="Workstreams">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="master_project_id"/>
+                <field name="contract_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_workstream_form" model="ir.ui.view">
+        <field name="name">vin.workstream.form</field>
+        <field name="model">vin.workstream</field>
+        <field name="arch" type="xml">
+            <form string="Workstream DAG">
+                <header>
+                    <button name="check_and_activate" type="object" string="Evaluate Dependencies &amp; Activate" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Phase 1 — Brand Strategy &amp; Identity System"/>
+                        </h1>
+                        <span class="badge badge-info"><field name="uuid" readonly="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Project &amp; Contract Context">
+                            <field name="master_project_id"/>
+                            <field name="contract_id"/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group string="DAG Dependencies">
+                            <field name="parent_workstream_ids" widget="many2many_tags"/>
+                            <field name="child_workstream_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Milestones">
+                            <field name="milestone_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="target_deadline"/>
+                                    <field name="allocated_amount"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Milestone Views -->
+    <record id="view_vin_milestone_tree" model="ir.ui.view">
+        <field name="name">vin.milestone.tree</field>
+        <field name="model">vin.milestone</field>
+        <field name="arch" type="xml">
+            <tree string="Milestones">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="workstream_id"/>
+                <field name="target_deadline"/>
+                <field name="allocated_amount"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_milestone_form" model="ir.ui.view">
+        <field name="name">vin.milestone.form</field>
+        <field name="model">vin.milestone</field>
+        <field name="arch" type="xml">
+            <form string="Milestone">
+                <header>
+                    <button name="action_start" type="object" string="Start Milestone" states="pending" class="btn-primary"/>
+                    <button name="action_accept_milestone" type="object" string="Accept Milestone (AC-05)" states="submitted,in_review" class="btn-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,active,submitted,in_review,accepted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. M1: Initial Visual Concepts &amp; Style Scapes"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Planning &amp; Escrow">
+                            <field name="workstream_id"/>
+                            <field name="target_deadline"/>
+                            <field name="allocated_amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group string="Prerequisites &amp; Trace">
+                            <field name="prerequisite_milestone_ids" widget="many2many_tags"/>
+                            <field name="uuid" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deliverables">
+                            <field name="deliverable_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                    <field name="revision_count"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Execution Tasks">
+                            <field name="task_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="task_type"/>
+                                    <field name="assigned_user_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Deliverable Views -->
+    <record id="view_vin_deliverable_tree" model="ir.ui.view">
+        <field name="name">vin.deliverable.tree</field>
+        <field name="model">vin.deliverable</field>
+        <field name="arch" type="xml">
+            <tree string="Deliverables">
+                <field name="name"/>
+                <field name="milestone_id"/>
+                <field name="state"/>
+                <field name="revision_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_deliverable_form" model="ir.ui.view">
+        <field name="name">vin.deliverable.form</field>
+        <field name="model">vin.deliverable</field>
+        <field name="arch" type="xml">
+            <form string="Deliverable Specification">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,submitted,under_review,accepted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Master Vector Brand Assets (SVG, AI, PDF)"/>
+                        </h1>
+                        <span class="badge badge-info"><field name="uuid" readonly="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Milestone Context">
+                            <field name="milestone_id"/>
+                            <field name="revision_count" readonly="1"/>
+                        </group>
+                        <group string="Active Release Pointer">
+                            <field name="latest_submission_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Specifications &amp; Quality Gates">
+                            <group>
+                                <field name="specification_summary"/>
+                                <field name="acceptance_criteria"/>
+                            </group>
+                        </page>
+                        <page string="Submission History Lineage">
+                            <field name="submission_ids" readonly="1">
+                                <tree>
+                                    <field name="version_no"/>
+                                    <field name="asset_vault_ref"/>
+                                    <field name="submitted_by"/>
+                                    <field name="submitted_at"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Task Views -->
+    <record id="view_vin_task_tree" model="ir.ui.view">
+        <field name="name">vin.task.tree</field>
+        <field name="model">vin.task</field>
+        <field name="arch" type="xml">
+            <tree string="Tasks">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="milestone_id"/>
+                <field name="task_type"/>
+                <field name="assigned_user_id"/>
+                <field name="deadline"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_task_form" model="ir.ui.view">
+        <field name="name">vin.task.form</field>
+        <field name="model">vin.task</field>
+        <field name="arch" type="xml">
+            <form string="Execution Task">
+                <header>
+                    <button name="action_start" type="object" string="Start Task" states="ready,blocked" class="btn-primary"/>
+                    <button name="action_complete" type="object" string="Complete Task" states="in_progress,in_review" class="btn-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="blocked,ready,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Benchmark Typography Explorations"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Task Classification">
+                            <field name="milestone_id"/>
+                            <field name="task_type"/>
+                            <field name="assigned_user_id"/>
+                            <field name="deadline"/>
+                        </group>
+                        <group string="Task DAG Dependencies">
+                            <field name="preceding_task_ids" widget="many2many_tags"/>
+                            <field name="uuid" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions and Menus -->
+    <record id="action_vin_workstream" model="ir.actions.act_window">
+        <field name="name">Workstreams (DAG)</field>
+        <field name="res_model">vin.workstream</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_milestone" model="ir.actions.act_window">
+        <field name="name">Milestones</field>
+        <field name="res_model">vin.milestone</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_deliverable" model="ir.actions.act_window">
+        <field name="name">Deliverables</field>
+        <field name="res_model">vin.deliverable</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_task" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">vin.task</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_execution_root" name="Project Execution" sequence="35"/>
+    <menuitem id="menu_vin_workstream" name="Workstreams (DAG)" parent="menu_vin_execution_root" action="action_vin_workstream" sequence="10"/>
+    <menuitem id="menu_vin_milestone" name="Milestones" parent="menu_vin_execution_root" action="action_vin_milestone" sequence="20"/>
+    <menuitem id="menu_vin_deliverable" name="Deliverables" parent="menu_vin_execution_root" action="action_vin_deliverable" sequence="30"/>
+    <menuitem id="menu_vin_task" name="Tasks" parent="menu_vin_execution_root" action="action_vin_task" sequence="40"/>
+</odoo>
