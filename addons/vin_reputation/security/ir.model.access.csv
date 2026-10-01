@@ -1,1 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_review_user,vin.review.user,model_vin_review,base.group_user,1,1,1,0
+access_vin_trust_event_user,vin.trust.event.user,model_vin_trust_event,base.group_user,1,0,0,0
+access_vin_trust_event_system,vin.trust.event.system,model_vin_trust_event,base.group_system,1,1,1,0
+access_vin_reputation_score_user,vin.reputation.score.user,model_vin_reputation_score,base.group_user,1,0,0,0
+access_vin_reputation_score_system,vin.reputation.score.system,model_vin_reputation_score,base.group_system,1,1,1,0

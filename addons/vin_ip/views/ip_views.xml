@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- IP Assignment Views -->
+    <record id="view_vin_ip_assignment_tree" model="ir.ui.view">
+        <field name="name">vin.ip.assignment.tree</field>
+        <field name="model">vin.ip.assignment</field>
+        <field name="arch" type="xml">
+            <tree string="IP Assignment Deeds" decoration-info="state == 'pending_payment'" decoration-success="state == 'assigned'" decoration-danger="state == 'revoked'">
+                <field name="assignment_number"/>
+                <field name="contract_id"/>
+                <field name="milestone_id"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="grant_type"/>
+                <field name="territory"/>
+                <field name="moral_rights_waived"/>
+                <field name="portfolio_display_permitted"/>
+                <field name="effective_date"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_ip_assignment_form" model="ir.ui.view">
+        <field name="name">vin.ip.assignment.form</field>
+        <field name="model">vin.ip.assignment</field>
+        <field name="arch" type="xml">
+            <form string="IP Assignment Deed">
+                <header>
+                    <button name="action_execute_assignment" string="Execute Assignment Deed" type="object" class="oe_highlight" invisible="state == 'assigned'"/>
+                    <button name="action_revoke" string="Revoke Deed" type="object" class="btn-danger" invisible="state == 'revoked'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending_payment,assigned"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">IP Assignment Deed Number</span>
+                        <h1><field name="assignment_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Parties &amp; Contracts">
+                            <field name="tenant_id"/>
+                            <field name="contract_id"/>
+                            <field name="milestone_id"/>
+                            <field name="deliverable_id"/>
+                            <field name="client_organization_id"/>
+                            <field name="partner_profile_id"/>
+                        </group>
+                        <group string="Grant Scope &amp; Legal Terms">
+                            <field name="grant_type"/>
+                            <field name="territory"/>
+                            <field name="moral_rights_waived"/>
+                            <field name="portfolio_display_permitted"/>
+                            <field name="portfolio_embargo_date"/>
+                            <field name="effective_date"/>
+                            <field name="assigned_at"/>
+                            <field name="sha256_hash"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="3rd-Party Materials &amp; Disclosures">
+                            <group>
+                                <field name="third_party_materials_disclosed"/>
+                            </group>
+                            <field name="third_party_license_details" placeholder="Stock footage, fonts, open-source code licenses..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Portfolio Display Grant Views -->
+    <record id="view_vin_portfolio_display_grant_tree" model="ir.ui.view">
+        <field name="name">vin.portfolio.display.grant.tree</field>
+        <field name="model">vin.portfolio.display.grant</field>
+        <field name="arch" type="xml">
+            <tree string="Portfolio Showcase Grants" decoration-success="status == 'approved'" decoration-warning="status == 'embargoed'" decoration-danger="status == 'rejected_nda'">
+                <field name="partner_profile_id"/>
+                <field name="contract_id"/>
+                <field name="deliverable_id"/>
+                <field name="client_organization_id"/>
+                <field name="status" widget="badge"/>
+                <field name="embargo_date"/>
+                <field name="reviewed_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_portfolio_display_grant_form" model="ir.ui.view">
+        <field name="name">vin.portfolio.display.grant.form</field>
+        <field name="model">vin.portfolio.display.grant</field>
+        <field name="arch" type="xml">
+            <form string="Portfolio Showcase Grant">
+                <header>
+                    <button name="action_approve" string="Approve Showcase" type="object" class="oe_highlight" invisible="status == 'approved'"/>
+                    <button name="action_reject_nda" string="Restrict under NDA" type="object" class="btn-danger" invisible="status == 'rejected_nda'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,approved,embargoed,rejected_nda"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Parties">
+                            <field name="tenant_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="contract_id"/>
+                            <field name="deliverable_id"/>
+                            <field name="client_organization_id"/>
+                        </group>
+                        <group string="Policy Status &amp; Embargo">
+                            <field name="embargo_date"/>
+                            <field name="reviewed_at"/>
+                        </group>
+                    </group>
+                    <field name="client_notes" placeholder="Client instructions or restrictions regarding public portfolio showcase..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_ip_assignment" model="ir.actions.act_window">
+        <field name="name">IP Assignment Deeds</field>
+        <field name="res_model">vin.ip.assignment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_portfolio_display_grant" model="ir.actions.act_window">
+        <field name="name">Portfolio Showcase Grants</field>
+        <field name="res_model">vin.portfolio.display.grant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_ip_root" name="IP Rights &amp; Showcase" parent="vin_core.menu_vin_core_root" sequence="90"/>
+    <menuitem id="menu_vin_ip_assignment_sub" name="IP Assignment Deeds" parent="menu_vin_ip_root" action="action_vin_ip_assignment" sequence="10"/>
+    <menuitem id="menu_vin_portfolio_grant_sub" name="Portfolio Showcase Grants" parent="menu_vin_ip_root" action="action_vin_portfolio_display_grant" sequence="20"/>
+</odoo>

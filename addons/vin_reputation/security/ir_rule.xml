@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Multi-Tenancy Record Rules for Reputation Domain -->
+
+        <!-- Reviews: tenant-isolated, no unlink -->
+        <record id="rule_vin_review_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Review: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_review"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Trust Events: tenant-isolated, system-only write, no unlink -->
+        <record id="rule_vin_trust_event_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Trust Event: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_trust_event"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Reputation Scores: tenant-isolated, read-only for users -->
+        <record id="rule_vin_reputation_score_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Reputation Score: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_reputation_score"/>
+            <field name="domain_force">['|', ('tenant_id', '=', False), ('tenant_id', '=', user.tenant_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

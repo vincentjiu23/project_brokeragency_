@@ -188,9 +188,9 @@ module/
   - [x] Module: `vin_subscription` (Client/Partner Plans, Tier Privileges, Dynamic Fee Evaluator, Commission Rule Profiles)
 - [x] **Phase 6: Acceptance, Revision & Dispute Engine**
   - [x] Module: `vin_dispute` (Tiered Acceptance Disputes, Virtual Escrow Freeze, Tamper-Evident Evidence, Binding Arbitration Case Enforcer)
-- [ ] **Phase 7: IP Rights, Portfolio & Reputation**
-  - [ ] Module: `vin_ip`
-  - [ ] Module: `vin_reputation`
+- [x] **Phase 7: IP Rights, Portfolio & Reputation**
+  - [x] Module: `vin_ip` (Asset-Level IP Assignment Deeds, Moral Rights Waivers, Dual-Condition Portfolio Showcase Grants, Embargo Lifecycle, Payment-Gated IP Transfer Orchestration Service)
+  - [x] Module: `vin_reputation` (Two-Way Dual-Blind Peer Reviews, SHA-256 Tamper-Proof Review Sealing, Time-Decay Internal Trust Score Pipeline [0–1000 scale, tiered], Public Rating Aggregates, Content Moderation Lifecycle)
 - [ ] **Phase 8: Compliance, Legal Hold & Production Hardening**
   - [ ] Module: `vin_compliance`
   - [ ] Module: `vin_integration`
