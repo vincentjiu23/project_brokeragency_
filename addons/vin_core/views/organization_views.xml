@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vin_organization_tree" model="ir.ui.view">
+        <field name="name">vin.organization.tree</field>
+        <field name="model">vin.organization</field>
+        <field name="arch" type="xml">
+            <tree string="Organizations">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="legal_entity_mode"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_organization_form" model="ir.ui.view">
+        <field name="name">vin.organization.form</field>
+        <field name="model">vin.organization</field>
+        <field name="arch" type="xml">
+            <form string="Commercial Organization">
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="active,suspended,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Organization Legal/Commercial Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group>
+                            <field name="legal_entity_mode"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Memberships">
+                            <field name="membership_ids">
+                                <tree editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="role"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Legal Entities">
+                            <field name="legal_entity_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="registration_number"/>
+                                    <field name="tax_id"/>
+                                    <field name="jurisdiction"/>
+                                    <field name="is_primary"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_organization" model="ir.actions.act_window">
+        <field name="name">Organizations</field>
+        <field name="res_model">vin.organization</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_organization" name="Organizations" parent="menu_vin_configuration" action="action_vin_organization" sequence="20"/>
+</odoo>

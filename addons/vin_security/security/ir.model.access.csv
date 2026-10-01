@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_cross_tenant_access_log_user,vin.cross.tenant.access.log.user,model_vin_cross_tenant_access_log,base.group_user,1,0,0,0
+access_vin_cross_tenant_access_log_admin,vin.cross.tenant.access.log.admin,model_vin_cross_tenant_access_log,base.group_system,1,0,1,0
+access_vin_governance_override_user,vin.governance.override.user,model_vin_governance_override,base.group_user,1,1,1,0
+access_vin_governance_override_admin,vin.governance.override.admin,model_vin_governance_override,base.group_system,1,1,1,1

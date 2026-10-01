@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vin_policy_version_tree" model="ir.ui.view">
+        <field name="name">vin.policy.version.tree</field>
+        <field name="model">vin.policy.version</field>
+        <field name="arch" type="xml">
+            <tree string="Policy Versions">
+                <field name="code"/>
+                <field name="version_no"/>
+                <field name="name"/>
+                <field name="effective_from"/>
+                <field name="effective_to"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_policy_version_form" model="ir.ui.view">
+        <field name="name">vin.policy.version.form</field>
+        <field name="model">vin.policy.version</field>
+        <field name="arch" type="xml">
+            <form string="Policy Version Definition">
+                <header>
+                    <button name="action_activate" type="object" string="Activate &amp; Enforce" states="draft" class="btn-primary"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,active,superseded"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Policy Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="version_no"/>
+                            <field name="uuid"/>
+                        </group>
+                        <group>
+                            <field name="effective_from"/>
+                            <field name="effective_to"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rules JSON Definition">
+                            <field name="rules_json" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                        <page string="Governance &amp; Justification">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_policy_version" model="ir.actions.act_window">
+        <field name="name">Policy Engine</field>
+        <field name="res_model">vin.policy.version</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_policy" name="Policy Engine" parent="vin_core.menu_vin_configuration" action="action_vin_policy_version" sequence="50"/>
+</odoo>

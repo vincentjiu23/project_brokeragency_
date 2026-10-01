@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vin_tenant_tree" model="ir.ui.view">
+        <field name="name">vin.tenant.tree</field>
+        <field name="model">vin.tenant</field>
+        <field name="arch" type="xml">
+            <tree string="Tenants">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="uuid"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_tenant_form" model="ir.ui.view">
+        <field name="name">vin.tenant.form</field>
+        <field name="model">vin.tenant</field>
+        <field name="arch" type="xml">
+            <form string="Tenant Boundary">
+                <header>
+                    <button name="suspend_tenant" type="object" string="Suspend Tenant" states="active" class="btn-warning"/>
+                    <field name="status" widget="statusbar" statusbar_visible="active,suspended,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tenant Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Organizations">
+                            <field name="organization_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="legal_entity_mode"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_tenant" model="ir.actions.act_window">
+        <field name="name">Tenants</field>
+        <field name="res_model">vin.tenant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_root" name="VIN Project" web_icon="vin_core,static/description/icon.png" sequence="10"/>
+    <menuitem id="menu_vin_configuration" name="Configuration" parent="menu_vin_root" sequence="100"/>
+    <menuitem id="menu_vin_tenant" name="Tenants" parent="menu_vin_configuration" action="action_vin_tenant" sequence="10"/>
+</odoo>

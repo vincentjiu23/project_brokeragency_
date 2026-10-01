@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VINCanonicalEventEnvelope",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "event_version",
+    "occurred_at",
+    "producer",
+    "tenant_id",
+    "organization_id",
+    "aggregate_type",
+    "aggregate_id",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique UUID identifying this event"
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Domain event type name (e.g., DELIVERABLE_SUBMITTED, MILESTONE_ACCEPTED)"
+    },
+    "event_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Version of the event payload schema"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of event generation"
+    },
+    "producer": {
+      "type": "string",
+      "description": "Service or module producing the event (e.g., vin_execution, vin_escrow)"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Isolation tenant identifier"
+    },
+    "organization_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Organization context identifier"
+    },
+    "aggregate_type": {
+      "type": "string",
+      "description": "Aggregate root domain entity (e.g., Contract, Deliverable, EscrowAllocation)"
+    },
+    "aggregate_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID of the domain aggregate root"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "End-to-end distributed trace and correlation identifier"
+    },
+    "causation_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Event ID that directly triggered this event"
+    },
+    "idempotency_key": {
+      "type": ["string", "null"],
+      "description": "Unique key to ensure idempotent handling"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Domain-specific event data payload"
+    }
+  },
+  "additionalProperties": false
+}

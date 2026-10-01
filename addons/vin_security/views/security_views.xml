@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cross-Tenant Access Log Views -->
+    <record id="view_vin_cross_tenant_log_tree" model="ir.ui.view">
+        <field name="name">vin.cross.tenant.access.log.tree</field>
+        <field name="model">vin.cross.tenant.access.log</field>
+        <field name="arch" type="xml">
+            <tree string="Cross-Tenant Logs" create="false" edit="false" delete="false">
+                <field name="timestamp_utc"/>
+                <field name="source_tenant_id"/>
+                <field name="target_tenant_id"/>
+                <field name="contractual_bridge_id"/>
+                <field name="actor_id"/>
+                <field name="action"/>
+                <field name="resource_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Governance Override Views -->
+    <record id="view_vin_governance_override_tree" model="ir.ui.view">
+        <field name="name">vin.governance.override.tree</field>
+        <field name="model">vin.governance.override</field>
+        <field name="arch" type="xml">
+            <tree string="Governance Overrides">
+                <field name="create_date"/>
+                <field name="override_domain"/>
+                <field name="requested_by_id"/>
+                <field name="approved_by_id"/>
+                <field name="state"/>
+                <field name="expiry_timestamp"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_governance_override_form" model="ir.ui.view">
+        <field name="name">vin.governance.override.form</field>
+        <field name="model">vin.governance.override</field>
+        <field name="arch" type="xml">
+            <form string="Governance Override (Four-Eyes Gate)">
+                <header>
+                    <button name="action_approve_override" type="object" string="Approve (Four-Eyes Gate)" states="draft" class="btn-warning"/>
+                    <button name="action_rollback" type="object" string="Rollback Override" states="approved" class="btn-danger"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,expired,rolled_back"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Request Context">
+                            <field name="override_domain"/>
+                            <field name="requested_by_id"/>
+                            <field name="approved_by_id"/>
+                        </group>
+                        <group string="Evidence &amp; Bounds">
+                            <field name="legal_evidence_ref"/>
+                            <field name="expiry_timestamp"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Justification">
+                            <field name="justification"/>
+                        </page>
+                        <page string="Rollback Instructions">
+                            <field name="rollback_instructions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_cross_tenant_log" model="ir.actions.act_window">
+        <field name="name">Cross-Tenant Access Log</field>
+        <field name="res_model">vin.cross.tenant.access.log</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_vin_governance_override" model="ir.actions.act_window">
+        <field name="name">Governance Overrides</field>
+        <field name="res_model">vin.governance.override</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_security_root" name="Security &amp; Governance" parent="vin_core.menu_vin_root" sequence="80"/>
+    <menuitem id="menu_vin_cross_tenant_log" name="Cross-Tenant Logs" parent="menu_vin_security_root" action="action_vin_cross_tenant_log" sequence="10"/>
+    <menuitem id="menu_vin_governance_override" name="Governance Overrides (SoD)" parent="menu_vin_security_root" action="action_vin_governance_override" sequence="20"/>
+</odoo>

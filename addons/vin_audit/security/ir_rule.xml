@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Audit Event Tenant Scoping -->
+        <record id="rule_vin_audit_event_tenant_isolation" model="ir.rule">
+            <field name="name">VIN Audit Event: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_audit_event"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[
+                ('tenant_id', '=', user.env['vin.membership'].search([('user_id', '=', user.id), ('status', '=', 'active')], limit=1).tenant_id.uuid)
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>

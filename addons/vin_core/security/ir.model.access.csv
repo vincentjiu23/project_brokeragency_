@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_tenant_user,vin.tenant.user,model_vin_tenant,base.group_user,1,0,0,0
+access_vin_tenant_admin,vin.tenant.admin,model_vin_tenant,base.group_system,1,1,1,1
+access_vin_organization_user,vin.organization.user,model_vin_organization,base.group_user,1,1,1,0
+access_vin_organization_admin,vin.organization.admin,model_vin_organization,base.group_system,1,1,1,1
+access_vin_legal_entity_user,vin.legal.entity.user,model_vin_legal_entity,base.group_user,1,1,1,0
+access_vin_legal_entity_admin,vin.legal.entity.admin,model_vin_legal_entity,base.group_system,1,1,1,1
+access_vin_membership_user,vin.membership.user,model_vin_membership,base.group_user,1,1,1,0
+access_vin_membership_admin,vin.membership.admin,model_vin_membership,base.group_system,1,1,1,1
+access_vin_master_project_user,vin.master.project.user,model_vin_master_project,base.group_user,1,1,1,0
+access_vin_master_project_admin,vin.master.project.admin,model_vin_master_project,base.group_system,1,1,1,1

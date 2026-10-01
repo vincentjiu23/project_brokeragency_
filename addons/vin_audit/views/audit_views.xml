@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vin_audit_event_tree" model="ir.ui.view">
+        <field name="name">vin.audit.event.tree</field>
+        <field name="model">vin.audit.event</field>
+        <field name="arch" type="xml">
+            <tree string="Audit Log Chain" create="false" edit="false" delete="false">
+                <field name="timestamp_utc"/>
+                <field name="action"/>
+                <field name="subject_type"/>
+                <field name="subject_id"/>
+                <field name="actor_id"/>
+                <field name="tenant_id"/>
+                <field name="correlation_id"/>
+                <field name="event_hash"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_audit_event_form" model="ir.ui.view">
+        <field name="name">vin.audit.event.form</field>
+        <field name="model">vin.audit.event</field>
+        <field name="arch" type="xml">
+            <form string="Immutable Audit Event" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group string="Action &amp; Subject">
+                            <field name="action"/>
+                            <field name="subject_type"/>
+                            <field name="subject_id"/>
+                            <field name="timestamp_utc"/>
+                        </group>
+                        <group string="Identity &amp; Tenant">
+                            <field name="actor_id"/>
+                            <field name="tenant_id"/>
+                            <field name="correlation_id"/>
+                            <field name="uuid"/>
+                        </group>
+                    </group>
+                    <group string="Cryptographic Hash Chain">
+                        <field name="previous_hash"/>
+                        <field name="event_hash"/>
+                    </group>
+                    <notebook>
+                        <page string="Payload Data">
+                            <field name="payload"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vin_audit_event" model="ir.actions.act_window">
+        <field name="name">Immutable Audit Vault</field>
+        <field name="res_model">vin.audit.event</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_audit" name="Audit Vault" parent="vin_core.menu_vin_root" action="action_vin_audit_event" sequence="90"/>
+</odoo>

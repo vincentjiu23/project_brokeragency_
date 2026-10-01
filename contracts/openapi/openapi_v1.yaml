@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: VIN Project API
+  version: 1.0.0
+  description: Enterprise API for VIN Project Creative Commerce Operating System
+paths:
+  /api/v1/projects/{id}/matches:
+    get:
+      summary: Retrieve match snapshot for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Match snapshot retrieved
+        '403':
+          description: Forbidden (Tenant/Scope mismatch)
+  /api/v1/contracts/{id}/proposals:
+    post:
+      summary: Submit a structured proposal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [delta_snapshot, author_role]
+              properties:
+                delta_snapshot:
+                  type: object
+                author_role:
+                  type: string
+      responses:
+        '201':
+          description: Proposal created and state machine updated
+  /api/v1/deliverables/{id}/submissions:
+    post:
+      summary: Submit immutable deliverable version
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [asset_hash, asset_object_id]
+              properties:
+                asset_hash:
+                  type: string
+                asset_object_id:
+                  type: string
+                  format: uuid
+      responses:
+        '201':
+          description: Deliverable submission accepted and hashed
+  /api/v1/payments/webhooks/{provider}:
+    post:
+      summary: Ingest payment provider webhook event
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [provider_event_id, event_type, amount, currency]
+              properties:
+                provider_event_id:
+                  type: string
+                event_type:
+                  type: string
+                amount:
+                  type: number
+                currency:
+                  type: string
+      responses:
+        '200':
+          description: Webhook ingested idempotently
