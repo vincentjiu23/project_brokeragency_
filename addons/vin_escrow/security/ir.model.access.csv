@@ -1,1 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_escrow_account_user,vin.escrow.account.user,model_vin_escrow_account,base.group_user,1,1,1,0
+access_vin_escrow_account_admin,vin.escrow.account.admin,model_vin_escrow_account,base.group_system,1,1,1,1
+access_vin_escrow_allocation_user,vin.escrow.allocation.user,model_vin_escrow_allocation,base.group_user,1,1,1,0
+access_vin_escrow_allocation_admin,vin.escrow.allocation.admin,model_vin_escrow_allocation,base.group_system,1,1,1,1
+access_vin_ledger_entry_user,vin.ledger.entry.user,model_vin_ledger_entry,base.group_user,1,0,1,0
+access_vin_ledger_entry_admin,vin.ledger.entry.admin,model_vin_ledger_entry,base.group_system,1,0,1,0

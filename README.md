@@ -179,9 +179,10 @@ module/
   - [x] Service: `asset_vault`
 - [x] **Phase 3: Contract Engine & e-Signature**
   - [x] Module: `vin_contract`
-- [ ] **Phase 4: Virtual Escrow Ledger & Payment Orchestration**
-  - [ ] Module: `vin_escrow`
-  - [ ] Module: `vin_payment`
+- [x] **Phase 4: Virtual Escrow Ledger & Payment Orchestration**
+  - [x] Module: `vin_escrow` (Escrow Accounts, Milestone Allocations, Balanced Double-Entry Virtual Ledger)
+  - [x] Module: `vin_payment` (Provider Gateway Abstraction, Webhook Idempotency, Payout Orchestration, Circuit Breaker)
+  - [x] Service: `services/payment_gateway` (Resilience gateway & mock provider abstraction)
 - [ ] **Phase 5: Tax, Invoicing & Subscription**
   - [ ] Module: `vin_tax_invoice`
   - [ ] Module: `vin_subscription`

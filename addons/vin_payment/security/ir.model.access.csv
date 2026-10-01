@@ -1,1 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_payment_provider_user,vin.payment.provider.user,model_vin_payment_provider,base.group_user,1,0,0,0
+access_vin_payment_provider_admin,vin.payment.provider.admin,model_vin_payment_provider,base.group_system,1,1,1,1
+access_vin_payout_user,vin.payout.user,model_vin_payout,base.group_user,1,1,1,0
+access_vin_payout_admin,vin.payout.admin,model_vin_payout,base.group_system,1,1,1,1
+access_vin_payment_event_user,vin.payment.event.user,model_vin_payment_event,base.group_user,1,0,1,0
+access_vin_payment_event_admin,vin.payment.event.admin,model_vin_payment_event,base.group_system,1,0,1,0
+access_vin_webhook_log_user,vin.webhook.log.user,model_vin_webhook_log,base.group_user,1,0,0,0
+access_vin_webhook_log_admin,vin.webhook.log.admin,model_vin_webhook_log,base.group_system,1,1,1,0

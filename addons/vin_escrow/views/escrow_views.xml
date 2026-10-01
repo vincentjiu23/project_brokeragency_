@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Escrow Account Views -->
+    <record id="view_vin_escrow_account_tree" model="ir.ui.view">
+        <field name="name">vin.escrow.account.tree</field>
+        <field name="model">vin.escrow.account</field>
+        <field name="arch" type="xml">
+            <tree string="Escrow Accounts">
+                <field name="account_number"/>
+                <field name="contract_id"/>
+                <field name="client_organization_id"/>
+                <field name="partner_profile_id"/>
+                <field name="calculated_balance"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state"/>
+                <field name="lock_reason"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_escrow_account_form" model="ir.ui.view">
+        <field name="name">vin.escrow.account.form</field>
+        <field name="model">vin.escrow.account</field>
+        <field name="arch" type="xml">
+            <form string="Virtual Escrow Account">
+                <header>
+                    <button name="action_unlock_escrow" type="object" string="Release Dispute Hold" states="locked" class="btn-warning"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,funded,disbursing,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="account_number" string="Escrow Account"/>
+                        <h1>
+                            <field name="account_number" readonly="1"/>
+                        </h1>
+                        <span class="badge badge-info"><field name="uuid" readonly="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Contract &amp; Parties">
+                            <field name="contract_id"/>
+                            <field name="client_organization_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group string="Double-Entry Financial State">
+                            <field name="calculated_balance" readonly="1"/>
+                            <field name="currency_id"/>
+                            <field name="lock_reason" readonly="1" attrs="{'invisible': [('lock_reason', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Milestone Allocations">
+                            <field name="allocation_ids">
+                                <tree>
+                                    <field name="milestone_id"/>
+                                    <field name="allocated_amount"/>
+                                    <field name="fx_rate"/>
+                                    <field name="fx_locked_at"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Double-Entry Ledger Journal (ADR-002)">
+                            <field name="ledger_entry_ids" readonly="1">
+                                <tree>
+                                    <field name="timestamp"/>
+                                    <field name="reference"/>
+                                    <field name="account_type"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="transaction_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Ledger Entry Views -->
+    <record id="view_vin_ledger_entry_tree" model="ir.ui.view">
+        <field name="name">vin.ledger.entry.tree</field>
+        <field name="model">vin.ledger.entry</field>
+        <field name="arch" type="xml">
+            <tree string="Virtual Ledger Entries" create="false" edit="false" delete="false">
+                <field name="timestamp"/>
+                <field name="escrow_account_id"/>
+                <field name="account_type"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="reference"/>
+                <field name="transaction_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions and Menus -->
+    <record id="action_vin_escrow_account" model="ir.actions.act_window">
+        <field name="name">Escrow Accounts</field>
+        <field name="res_model">vin.escrow.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_ledger_entry" model="ir.actions.act_window">
+        <field name="name">Virtual Ledger Entries</field>
+        <field name="res_model">vin.ledger.entry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_vin_escrow_root" name="Virtual Escrow" sequence="40"/>
+    <menuitem id="menu_vin_escrow_account" name="Escrow Accounts" parent="menu_vin_escrow_root" action="action_vin_escrow_account" sequence="10"/>
+    <menuitem id="menu_vin_ledger_entry" name="Virtual Ledger Rows" parent="menu_vin_escrow_root" action="action_vin_ledger_entry" sequence="20"/>
+</odoo>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================================================= -->
+    <!-- PAYMENT PROVIDER VIEWS                                     -->
+    <!-- ========================================================= -->
+
+    <record id="vin_payment_provider_form" model="ir.ui.view">
+        <field name="name">vin.payment.provider.form</field>
+        <field name="model">vin.payment.provider</field>
+        <field name="arch" type="xml">
+            <form string="Payment Provider">
+                <header>
+                    <button name="action_activate_live" string="Go Live" type="object"
+                            class="btn-primary"
+                            invisible="state != 'test'"/>
+                    <button name="action_disable" string="Disable" type="object"
+                            class="btn-danger"
+                            invisible="state == 'disabled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,test,live"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Provider Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="code"/>
+                            <field name="tenant_id"/>
+                            <field name="sequence"/>
+                            <field name="webhook_url" widget="url"/>
+                        </group>
+                        <group string="Capabilities">
+                            <field name="supported_currency_ids" widget="many2many_tags"/>
+                            <field name="supports_refund"/>
+                            <field name="supports_partial_refund"/>
+                            <field name="supports_cross_border"/>
+                            <field name="max_payout_amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Credentials (KMS)" groups="base.group_system">
+                            <group>
+                                <field name="api_key_ref" password="True"/>
+                                <field name="api_secret_ref" password="True"/>
+                                <field name="webhook_secret_ref" password="True"/>
+                                <field name="sandbox_api_key_ref" password="True"/>
+                                <field name="sandbox_api_secret_ref" password="True"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="vin_payment_provider_tree" model="ir.ui.view">
+        <field name="name">vin.payment.provider.tree</field>
+        <field name="model">vin.payment.provider</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Providers" decoration-success="state == 'live'"
+                  decoration-warning="state == 'test'" decoration-muted="state == 'disabled'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="tenant_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'live'"
+                       decoration-warning="state == 'test'"
+                       decoration-danger="state == 'disabled'"/>
+                <field name="supported_currency_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vin_payment_provider_action" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">vin.payment.provider</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your first payment provider
+            </p>
+            <p>Set up Stripe, Xendit, or other payment gateways for payout processing.</p>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- PAYOUT VIEWS                                               -->
+    <!-- ========================================================= -->
+
+    <record id="vin_payout_form" model="ir.ui.view">
+        <field name="name">vin.payout.form</field>
+        <field name="model">vin.payout</field>
+        <field name="arch" type="xml">
+            <form string="Payout">
+                <header>
+                    <button name="action_submit_for_approval" string="Submit for Approval"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve (Four-Eyes)"
+                            type="object" class="btn-success"
+                            invisible="state != 'pending_approval'"/>
+                    <button name="action_reject" string="Reject"
+                            type="object" class="btn-danger"
+                            invisible="state != 'pending_approval'"/>
+                    <button name="action_retry_submission" string="Retry Submission"
+                            type="object" class="btn-warning"
+                            invisible="state != 'failed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending_approval,approved,submitted,processing,succeeded"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Payout Details">
+                            <field name="tenant_id"/>
+                            <field name="escrow_account_id"/>
+                            <field name="allocation_id"/>
+                            <field name="contract_id"/>
+                            <field name="partner_profile_id"/>
+                            <field name="provider_id"/>
+                        </group>
+                        <group string="Financial">
+                            <field name="gross_amount"/>
+                            <field name="tax_withholding"/>
+                            <field name="net_payout_amount"/>
+                            <field name="currency_id"/>
+                            <field name="payout_currency_id"/>
+                            <field name="fx_rate"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Provider / Processing">
+                            <field name="provider_transaction_id"/>
+                            <field name="idempotency_key"/>
+                            <field name="retry_count"/>
+                            <field name="max_retries"/>
+                        </group>
+                        <group string="Separation of Duties">
+                            <field name="initiated_by_id"/>
+                            <field name="approved_by_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payment Event Log">
+                            <field name="event_ids">
+                                <tree string="Payment Events" create="false" edit="false" delete="false"
+                                      decoration-success="event_type == 'succeeded'"
+                                      decoration-danger="event_type in ('failed', 'refund_failed')"
+                                      decoration-info="event_type in ('processing', 'refund_processing')">
+                                    <field name="timestamp"/>
+                                    <field name="event_type" widget="badge"
+                                           decoration-success="event_type == 'succeeded'"
+                                           decoration-danger="event_type in ('failed', 'cancelled')"
+                                           decoration-info="event_type == 'processing'"/>
+                                    <field name="provider_reference"/>
+                                    <field name="amount"/>
+                                    <field name="failure_code"/>
+                                    <field name="failure_message"/>
+                                    <field name="actor_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="vin_payout_tree" model="ir.ui.view">
+        <field name="name">vin.payout.tree</field>
+        <field name="model">vin.payout</field>
+        <field name="arch" type="xml">
+            <tree string="Payouts"
+                  decoration-success="state == 'succeeded'"
+                  decoration-danger="state in ('failed', 'rejected', 'refund_failed')"
+                  decoration-info="state in ('processing', 'submitted', 'refund_processing')"
+                  decoration-warning="state == 'pending_approval'">
+                <field name="reference"/>
+                <field name="partner_profile_id"/>
+                <field name="gross_amount" sum="Total Gross"/>
+                <field name="net_payout_amount" sum="Total Net"/>
+                <field name="currency_id"/>
+                <field name="provider_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'succeeded'"
+                       decoration-danger="state in ('failed', 'rejected')"
+                       decoration-warning="state == 'pending_approval'"
+                       decoration-info="state in ('processing', 'submitted')"/>
+                <field name="initiated_by_id"/>
+                <field name="approved_by_id"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vin_payout_action" model="ir.actions.act_window">
+        <field name="name">Payouts</field>
+        <field name="res_model">vin.payout</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No payouts yet
+            </p>
+            <p>Payouts are created automatically when milestone escrow funds are released.</p>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- WEBHOOK LOG VIEWS                                          -->
+    <!-- ========================================================= -->
+
+    <record id="vin_webhook_log_tree" model="ir.ui.view">
+        <field name="name">vin.webhook.log.tree</field>
+        <field name="model">vin.webhook.log</field>
+        <field name="arch" type="xml">
+            <tree string="Webhook Logs" create="false" edit="false" delete="false"
+                  decoration-success="processing_state == 'processed'"
+                  decoration-muted="processing_state == 'duplicate'"
+                  decoration-danger="processing_state in ('invalid_signature', 'processing_error')">
+                <field name="received_at"/>
+                <field name="provider_code"/>
+                <field name="event_type"/>
+                <field name="provider_event_id"/>
+                <field name="processing_state" widget="badge"
+                       decoration-success="processing_state == 'processed'"
+                       decoration-warning="processing_state == 'pending'"
+                       decoration-danger="processing_state in ('invalid_signature', 'processing_error')"
+                       decoration-muted="processing_state in ('duplicate', 'ignored')"/>
+                <field name="signature_verified"/>
+                <field name="payout_id"/>
+                <field name="http_status_code"/>
+                <field name="ip_address"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vin_webhook_log_form" model="ir.ui.view">
+        <field name="name">vin.webhook.log.form</field>
+        <field name="model">vin.webhook.log</field>
+        <field name="arch" type="xml">
+            <form string="Webhook Log Entry" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group string="Webhook Details">
+                            <field name="uuid"/>
+                            <field name="provider_code"/>
+                            <field name="provider_event_id"/>
+                            <field name="event_type"/>
+                            <field name="received_at"/>
+                            <field name="ip_address"/>
+                        </group>
+                        <group string="Processing">
+                            <field name="processing_state" widget="badge"/>
+                            <field name="signature_verified"/>
+                            <field name="payload_hash"/>
+                            <field name="payout_id"/>
+                            <field name="http_status_code"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Raw Payload">
+                            <field name="raw_payload" widget="text"/>
+                        </page>
+                        <page string="Signature">
+                            <field name="signature_header"/>
+                        </page>
+                        <page string="Error Details" invisible="not processing_error">
+                            <field name="processing_error" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vin_webhook_log_action" model="ir.actions.act_window">
+        <field name="name">Webhook Logs</field>
+        <field name="res_model">vin.webhook.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No webhook events received yet
+            </p>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- MENU ITEMS                                                 -->
+    <!-- ========================================================= -->
+
+    <menuitem id="vin_payment_menu_root"
+              name="VIN Payments"
+              sequence="40"/>
+
+    <menuitem id="vin_payment_menu_payouts"
+              name="Payouts"
+              parent="vin_payment_menu_root"
+              action="vin_payout_action"
+              sequence="10"/>
+
+    <menuitem id="vin_payment_menu_providers"
+              name="Payment Providers"
+              parent="vin_payment_menu_root"
+              action="vin_payment_provider_action"
+              sequence="20"/>
+
+    <menuitem id="vin_payment_menu_webhooks"
+              name="Webhook Logs"
+              parent="vin_payment_menu_root"
+              action="vin_webhook_log_action"
+              sequence="30"
+              groups="base.group_system"/>
+
+</odoo>

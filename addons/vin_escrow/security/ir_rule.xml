@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Escrow Account Isolation -->
+        <record id="rule_vin_escrow_account_tenant" model="ir.rule">
+            <field name="name">Escrow Account: Tenant &amp; Contract Isolation</field>
+            <field name="model_id" ref="model_vin_escrow_account"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[
+                '|',
+                ('tenant_id.organization_ids.membership_ids.user_id', '=', user.id),
+                ('partner_profile_id.partner_id.user_ids', 'in', [user.id])
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Ledger Entry Isolation -->
+        <record id="rule_vin_ledger_entry_tenant" model="ir.rule">
+            <field name="name">Ledger Entry: Tenant Isolation</field>
+            <field name="model_id" ref="model_vin_ledger_entry"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('tenant_id.organization_ids.membership_ids.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

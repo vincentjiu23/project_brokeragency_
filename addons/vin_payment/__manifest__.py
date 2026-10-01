@@ -6,10 +6,11 @@
     'summary': 'Payment provider abstraction, idempotent webhooks, and payout state machines',
     'description': """Owns payment provider abstraction, idempotent webhook processing, payout state machines, and reconciliation.""",
     'author': 'VIN Project Team',
-    'depends': ['vin_core', 'vin_escrow', 'vin_audit'],
+    'depends': ['vin_core', 'vin_escrow', 'vin_audit', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/payment_views.xml',
     ],
     'installable': True,
     'application': False,
