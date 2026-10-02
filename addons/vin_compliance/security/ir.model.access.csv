@@ -1,1 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_retention_rule_user,vin.retention.rule.user,model_vin_retention_rule,base.group_user,1,0,0,0
+access_vin_retention_rule_system,vin.retention.rule.system,model_vin_retention_rule,base.group_system,1,1,1,0
+access_vin_legal_hold_user,vin.legal.hold.user,model_vin_legal_hold,base.group_user,1,0,0,0
+access_vin_legal_hold_system,vin.legal.hold.system,model_vin_legal_hold,base.group_system,1,1,1,0
+access_vin_evidence_package_user,vin.evidence.package.user,model_vin_evidence_package,base.group_user,1,0,0,0
+access_vin_evidence_package_system,vin.evidence.package.system,model_vin_evidence_package,base.group_system,1,1,1,0
+access_vin_dsar_request_user,vin.dsar.request.user,model_vin_dsar_request,base.group_user,1,0,1,0
+access_vin_dsar_request_system,vin.dsar.request.system,model_vin_dsar_request,base.group_system,1,1,1,0

@@ -191,9 +191,9 @@ module/
 - [x] **Phase 7: IP Rights, Portfolio & Reputation**
   - [x] Module: `vin_ip` (Asset-Level IP Assignment Deeds, Moral Rights Waivers, Dual-Condition Portfolio Showcase Grants, Embargo Lifecycle, Payment-Gated IP Transfer Orchestration Service)
   - [x] Module: `vin_reputation` (Two-Way Dual-Blind Peer Reviews, SHA-256 Tamper-Proof Review Sealing, Time-Decay Internal Trust Score Pipeline [0–1000 scale, tiered], Public Rating Aggregates, Content Moderation Lifecycle)
-- [ ] **Phase 8: Compliance, Legal Hold & Production Hardening**
-  - [ ] Module: `vin_compliance`
-  - [ ] Module: `vin_integration`
+- [x] **Phase 8: Compliance, Legal Hold & Production Hardening**
+  - [x] Module: `vin_compliance` (Statutory Data Retention Schedules, Active Legal Hold Preservation Locks, Admissible Evidence Package Compilation with SHA-256 Seals, GDPR/UU PDP DSAR Cryptographic Erasure with Zero Ledger Alteration)
+  - [x] Module: `vin_integration` (Resilience Gateway, Outbound/Inbound Circuit Breakers [CLOSED/OPEN/HALF-OPEN], Dead-Letter Queue with Idempotent Replay, Telemetry & Auto-Degradation [AC-06, AC-07])
 
 ---
 

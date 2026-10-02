@@ -1,1 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vin_integration_endpoint_user,vin.integration.endpoint.user,model_vin_integration_endpoint,base.group_user,1,0,0,0
+access_vin_integration_endpoint_system,vin.integration.endpoint.system,model_vin_integration_endpoint,base.group_system,1,1,1,0
+access_vin_dlq_message_user,vin.dlq.message.user,model_vin_dlq_message,base.group_user,1,0,0,0
+access_vin_dlq_message_system,vin.dlq.message.system,model_vin_dlq_message,base.group_system,1,1,1,0
+access_vin_event_replay_log_user,vin.event.replay.log.user,model_vin_event_replay_log,base.group_user,1,0,0,0
+access_vin_event_replay_log_system,vin.event.replay.log.system,model_vin_event_replay_log,base.group_system,1,1,1,0

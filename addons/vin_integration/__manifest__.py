@@ -6,10 +6,11 @@
     'summary': 'Integration resilience, circuit breakers, dead-letter queues, and event replay',
     'description': """Owns third-party integration resilience, circuit breakers, dead-letter queue, and safe event replay mechanisms.""",
     'author': 'VIN Project Team',
-    'depends': ['vin_core', 'vin_audit'],
+    'depends': ['vin_core', 'vin_audit', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/integration_views.xml',
     ],
     'installable': True,
     'application': False,

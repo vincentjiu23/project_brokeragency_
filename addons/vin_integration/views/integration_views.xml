@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Integration Endpoint Views -->
+    <record id="view_vin_integration_endpoint_tree" model="ir.ui.view">
+        <field name="name">vin.integration.endpoint.tree</field>
+        <field name="model">vin.integration.endpoint</field>
+        <field name="arch" type="xml">
+            <tree string="Integration Endpoints" decoration-success="circuit_state == 'closed'" decoration-warning="circuit_state == 'half_open'" decoration-danger="circuit_state == 'open'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="provider_type"/>
+                <field name="circuit_state" widget="badge"/>
+                <field name="health_status" widget="badge"/>
+                <field name="consecutive_failures"/>
+                <field name="total_calls"/>
+                <field name="failed_calls"/>
+                <field name="last_failure_at"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_integration_endpoint_form" model="ir.ui.view">
+        <field name="name">vin.integration.endpoint.form</field>
+        <field name="model">vin.integration.endpoint</field>
+        <field name="arch" type="xml">
+            <form string="Integration Endpoint &amp; Circuit Breaker">
+                <header>
+                    <button name="action_manual_reset" string="Reset Circuit to CLOSED" type="object" class="oe_highlight" invisible="circuit_state == 'closed'"/>
+                    <field name="circuit_state" widget="statusbar" statusbar_visible="closed,half_open,open"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Integration Endpoint</span>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Endpoint Configuration">
+                            <field name="tenant_id"/>
+                            <field name="code"/>
+                            <field name="provider_type"/>
+                            <field name="base_url"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Circuit Breaker Policy">
+                            <field name="failure_threshold"/>
+                            <field name="recovery_timeout_sec"/>
+                            <field name="health_status" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Live Telemetry &amp; Diagnostics">
+                            <group>
+                                <group string="Performance Metrics">
+                                    <field name="total_calls"/>
+                                    <field name="failed_calls"/>
+                                    <field name="consecutive_failures"/>
+                                    <field name="consecutive_successes"/>
+                                </group>
+                                <group string="Timestamps &amp; Alerts">
+                                    <field name="last_success_at"/>
+                                    <field name="last_failure_at"/>
+                                    <field name="last_trip_at"/>
+                                </group>
+                            </group>
+                            <field name="last_error_message" placeholder="Diagnostic details of last observed failure..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dead Letter Queue Views -->
+    <record id="view_vin_dlq_message_tree" model="ir.ui.view">
+        <field name="name">vin.dlq.message.tree</field>
+        <field name="model">vin.dlq.message</field>
+        <field name="arch" type="xml">
+            <tree string="Dead-Letter Queue" decoration-warning="state == 'pending'" decoration-info="state == 'replaying'" decoration-success="state == 'resolved'" decoration-danger="state == 'exhausted'" decoration-muted="state == 'discarded'">
+                <field name="message_reference"/>
+                <field name="endpoint_id"/>
+                <field name="event_type"/>
+                <field name="idempotency_key"/>
+                <field name="direction"/>
+                <field name="retry_count"/>
+                <field name="first_attempt_at"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_dlq_message_form" model="ir.ui.view">
+        <field name="name">vin.dlq.message.form</field>
+        <field name="model">vin.dlq.message</field>
+        <field name="arch" type="xml">
+            <form string="Dead-Letter Queue Message">
+                <header>
+                    <button name="action_replay" string="Replay Payload (Idempotent)" type="object" class="oe_highlight" invisible="state in ['resolved', 'discarded']"/>
+                    <button name="action_discard" string="Discard Message" type="object" class="btn-secondary" invisible="state in ['resolved', 'discarded']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,replaying,resolved,exhausted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">DLQ Message Reference</span>
+                        <h1><field name="message_reference"/></h1>
+                    </div>
+                    <group>
+                        <group string="Routing &amp; Context">
+                            <field name="tenant_id"/>
+                            <field name="endpoint_id"/>
+                            <field name="event_type"/>
+                            <field name="direction"/>
+                            <field name="idempotency_key"/>
+                        </group>
+                        <group string="Retry Diagnostics">
+                            <field name="retry_count"/>
+                            <field name="max_retries"/>
+                            <field name="first_attempt_at"/>
+                            <field name="last_attempt_at"/>
+                            <field name="resolved_at"/>
+                            <field name="resolved_by_user_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payload Data">
+                            <field name="payload" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                        <page string="Failure Diagnostic / Trace">
+                            <field name="error_diagnostic"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Event Replay Log Views -->
+    <record id="view_vin_event_replay_log_tree" model="ir.ui.view">
+        <field name="name">vin.event.replay.log.tree</field>
+        <field name="model">vin.event.replay.log</field>
+        <field name="arch" type="xml">
+            <tree string="Event Replay Audit Trail" create="false" edit="false" delete="false" decoration-success="status == 'success'" decoration-danger="status == 'failure'">
+                <field name="replayed_at"/>
+                <field name="dlq_message_id"/>
+                <field name="endpoint_id"/>
+                <field name="idempotency_key"/>
+                <field name="latency_ms"/>
+                <field name="replayed_by_user_id"/>
+                <field name="status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_integration_endpoint" model="ir.actions.act_window">
+        <field name="name">Integration Endpoints</field>
+        <field name="res_model">vin.integration.endpoint</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_dlq_message" model="ir.actions.act_window">
+        <field name="name">Dead-Letter Queue</field>
+        <field name="res_model">vin.dlq.message</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_event_replay_log" model="ir.actions.act_window">
+        <field name="name">Event Replay Audit Log</field>
+        <field name="res_model">vin.event.replay.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_integration_root" name="Integrations &amp; Resilience" parent="vin_core.menu_vin_core_root" sequence="120"/>
+    <menuitem id="menu_vin_integration_endpoint_sub" name="Endpoints &amp; Breakers" parent="menu_vin_integration_root" action="action_vin_integration_endpoint" sequence="10"/>
+    <menuitem id="menu_vin_dlq_message_sub" name="Dead-Letter Queue (DLQ)" parent="menu_vin_integration_root" action="action_vin_dlq_message" sequence="20"/>
+    <menuitem id="menu_vin_event_replay_log_sub" name="Replay Audit Logs" parent="menu_vin_integration_root" action="action_vin_event_replay_log" sequence="30"/>
+</odoo>

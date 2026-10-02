@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Retention Rules Views -->
+    <record id="view_vin_retention_rule_tree" model="ir.ui.view">
+        <field name="name">vin.retention.rule.tree</field>
+        <field name="model">vin.retention.rule</field>
+        <field name="arch" type="xml">
+            <tree string="Data Retention Policies">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="target_category"/>
+                <field name="target_model_name"/>
+                <field name="retention_period_days"/>
+                <field name="action_on_expiry"/>
+                <field name="legal_basis"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_retention_rule_form" model="ir.ui.view">
+        <field name="name">vin.retention.rule.form</field>
+        <field name="model">vin.retention.rule</field>
+        <field name="arch" type="xml">
+            <form string="Data Retention Policy">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Retention Rule Code</span>
+                        <h1><field name="code"/></h1>
+                    </div>
+                    <group>
+                        <group string="Policy Scope">
+                            <field name="tenant_id"/>
+                            <field name="name"/>
+                            <field name="target_category"/>
+                            <field name="target_model_name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Lifecycle Constraints">
+                            <field name="retention_period_days"/>
+                            <field name="action_on_expiry"/>
+                            <field name="legal_basis"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Statutory references, audit requirements, and lifecycle details..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Legal Hold Views -->
+    <record id="view_vin_legal_hold_tree" model="ir.ui.view">
+        <field name="name">vin.legal.hold.tree</field>
+        <field name="model">vin.legal.hold</field>
+        <field name="arch" type="xml">
+            <tree string="Legal Hold Cases" decoration-danger="state == 'active'" decoration-muted="state == 'lifted'">
+                <field name="hold_reference"/>
+                <field name="title"/>
+                <field name="matter_name"/>
+                <field name="scope_type"/>
+                <field name="issuing_authority"/>
+                <field name="applied_at"/>
+                <field name="lifted_at"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_legal_hold_form" model="ir.ui.view">
+        <field name="name">vin.legal.hold.form</field>
+        <field name="model">vin.legal.hold</field>
+        <field name="arch" type="xml">
+            <form string="Legal Hold Case">
+                <header>
+                    <button name="action_apply_hold" string="Activate Legal Hold (Lock Records)" type="object" class="btn-danger" invisible="state != 'draft'"/>
+                    <button name="action_lift_hold" string="Lift Legal Hold" type="object" class="btn-secondary" invisible="state != 'active'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,lifted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Legal Hold Case Docket</span>
+                        <h1><field name="hold_reference"/></h1>
+                    </div>
+                    <group>
+                        <group string="Matter Details">
+                            <field name="tenant_id"/>
+                            <field name="title"/>
+                            <field name="matter_name"/>
+                            <field name="docket_number"/>
+                            <field name="issuing_authority"/>
+                        </group>
+                        <group string="Scope of Preservation">
+                            <field name="scope_type"/>
+                            <field name="contract_id" invisible="scope_type != 'contract'"/>
+                            <field name="project_id" invisible="scope_type != 'project'"/>
+                            <field name="organization_id" invisible="scope_type != 'organization'"/>
+                            <field name="partner_profile_id" invisible="scope_type != 'partner_profile'"/>
+                            <field name="applied_by_user_id"/>
+                            <field name="applied_at"/>
+                            <field name="lifted_by_user_id" invisible="state != 'lifted'"/>
+                            <field name="lifted_at" invisible="state != 'lifted'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Preservation Notice &amp; Instructions">
+                            <group string="Legal Grounds">
+                                <field name="hold_reason"/>
+                            </group>
+                            <group string="Custodian Instructions">
+                                <field name="preservation_instructions"/>
+                            </group>
+                        </page>
+                        <page string="Lift Rationale" invisible="state != 'lifted'">
+                            <field name="lift_reason"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Evidence Package Views -->
+    <record id="view_vin_evidence_package_tree" model="ir.ui.view">
+        <field name="name">vin.evidence.package.tree</field>
+        <field name="model">vin.evidence.package</field>
+        <field name="arch" type="xml">
+            <tree string="Evidence Packages" decoration-success="state == 'sealed'">
+                <field name="package_number"/>
+                <field name="title"/>
+                <field name="purpose"/>
+                <field name="contract_id"/>
+                <field name="item_count"/>
+                <field name="sealed_at"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_evidence_package_form" model="ir.ui.view">
+        <field name="name">vin.evidence.package.form</field>
+        <field name="model">vin.evidence.package</field>
+        <field name="arch" type="xml">
+            <form string="Evidence Package">
+                <header>
+                    <button name="action_compile_and_seal" string="Compile &amp; Seal Package" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sealed,exported"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Evidence Package Dossier</span>
+                        <h1><field name="package_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Package Scope">
+                            <field name="tenant_id"/>
+                            <field name="title"/>
+                            <field name="purpose"/>
+                            <field name="contract_id"/>
+                            <field name="legal_hold_id"/>
+                            <field name="dispute_id"/>
+                        </group>
+                        <group string="Cryptographic Sealing">
+                            <field name="item_count"/>
+                            <field name="sha256_hash"/>
+                            <field name="sealed_by_user_id"/>
+                            <field name="sealed_at"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Compiled Evidence JSON">
+                            <field name="package_data" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- DSAR Request Views -->
+    <record id="view_vin_dsar_request_tree" model="ir.ui.view">
+        <field name="name">vin.dsar.request.tree</field>
+        <field name="model">vin.dsar.request</field>
+        <field name="arch" type="xml">
+            <tree string="Privacy Requests (DSAR)" decoration-warning="state == 'submitted'" decoration-info="state == 'verified'" decoration-danger="state == 'blocked_legal_hold'" decoration-success="state == 'executed'">
+                <field name="request_number"/>
+                <field name="subject_email"/>
+                <field name="request_type"/>
+                <field name="identity_verified"/>
+                <field name="submitted_at"/>
+                <field name="completed_at"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vin_dsar_request_form" model="ir.ui.view">
+        <field name="name">vin.dsar.request.form</field>
+        <field name="model">vin.dsar.request</field>
+        <field name="arch" type="xml">
+            <form string="Privacy Request (DSAR)">
+                <header>
+                    <button name="action_verify_identity" string="Verify Subject Identity" type="object" class="oe_highlight" invisible="identity_verified"/>
+                    <button name="action_execute_erasure" string="Execute Cryptographic Erasure" type="object" class="btn-danger" invisible="state not in ['verified'] or request_type != 'erasure'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="submitted,verified,executed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">DSAR Request Reference</span>
+                        <h1><field name="request_number"/></h1>
+                    </div>
+                    <group>
+                        <group string="Data Subject">
+                            <field name="tenant_id"/>
+                            <field name="subject_email"/>
+                            <field name="subject_user_id"/>
+                            <field name="subject_partner_id"/>
+                            <field name="subject_organization_id"/>
+                            <field name="request_type"/>
+                        </group>
+                        <group string="Verification &amp; Execution">
+                            <field name="identity_verified"/>
+                            <field name="verification_notes"/>
+                            <field name="submitted_at"/>
+                            <field name="completed_at"/>
+                            <field name="executed_by_user_id"/>
+                            <field name="erasure_certificate_hash"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="DPO Execution Notes">
+                            <field name="execution_notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_vin_retention_rule" model="ir.actions.act_window">
+        <field name="name">Data Retention Policies</field>
+        <field name="res_model">vin.retention.rule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_legal_hold" model="ir.actions.act_window">
+        <field name="name">Legal Hold Cases</field>
+        <field name="res_model">vin.legal.hold</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_evidence_package" model="ir.actions.act_window">
+        <field name="name">Evidence Packages</field>
+        <field name="res_model">vin.evidence.package</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_vin_dsar_request" model="ir.actions.act_window">
+        <field name="name">Privacy Requests (DSAR)</field>
+        <field name="res_model">vin.dsar.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_vin_compliance_root" name="Compliance &amp; Legal Holds" parent="vin_core.menu_vin_core_root" sequence="110"/>
+    <menuitem id="menu_vin_retention_rule_sub" name="Retention Policies" parent="menu_vin_compliance_root" action="action_vin_retention_rule" sequence="10"/>
+    <menuitem id="menu_vin_legal_hold_sub" name="Legal Holds" parent="menu_vin_compliance_root" action="action_vin_legal_hold" sequence="20"/>
+    <menuitem id="menu_vin_evidence_package_sub" name="Evidence Packages" parent="menu_vin_compliance_root" action="action_vin_evidence_package" sequence="30"/>
+    <menuitem id="menu_vin_dsar_request_sub" name="DSAR Privacy Requests" parent="menu_vin_compliance_root" action="action_vin_dsar_request" sequence="40"/>
+</odoo>
